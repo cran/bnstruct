@@ -11,22 +11,30 @@
 #' Learn a network (structure and parameters) of a \link{BN} from a \link{BNDataset} (see the \code{Details} section).
 #' 
 #' Learn the structure (the directed acyclic graph) of a \code{\link{BN}} object according to a \code{\link{BNDataset}}.
-#' We provide three algorithms in order to learn the structure of the network, that can be chosen with the \code{algo} parameter.
-#' The first is the Silander-Myllym\"aki (\code{sm})
+#' We provide five algorithms for learning the structure of the network, that can be chosen with the \code{algo} parameter.
+#' The first one is the Silander-Myllym\"aki (\code{sm})
 #' exact search-and-score algorithm, that performs a complete evaluation of the search space in order to discover
 #' the best network; this algorithm may take a very long time, and can be inapplicable when discovering networks
 #' with more than 25--30 nodes. Even for small networks, users are strongly encouraged to provide
 #' meaningful parameters such as the layering of the nodes, or the maximum number of parents -- refer to the 
 #' documentation in package manual for more details on the method parameters.
 #' 
-#' The second algorithm (and the default one) is the Max-Min Hill-Climbing heuristic (\code{mmhc}), that performs a statistical
-#' sieving of the search space followed by a greedy evaluation. It is considerably faster than the complete method,
-#' at the cost of a (likely)
-#' lower quality. Also note that in the case of a very dense network and lots of obsevations, the statistical evaluation
+#' The second method is the constraint-based Max-Min Parents-and-Children (\code{mmpc}), that returns the skeleton of the network.
+#' Given the possible presence of loops, due to the non-directionality of the edges discovered, no parameter learning
+#' is possible using this algorithm. Also note that in the case of a very dense network and lots of obsevations, the statistical evaluation
 #' of the search space may take a long time. Also for this algorithm there are parameters that may need to be tuned,
-#' mainly the confidence threshold of the statistical pruning.
+#' mainly the confidence threshold of the statistical pruning. Please refer to the rest of this documentation for their explanation.
 #' 
-#' The third method is the Structural Expectation-Maximization (\code{sem}) algorithm,
+#' The third algorithm is another heuristic, the Hill-Climbing (\code{hc}). It can start from the complete space of possibilities
+#' (default) or from a reduced subset of possible edges, using the \code{cpc} argument.
+#' 
+#' The fourth algorithm (and the default one) is the Max-Min Hill-Climbing heuristic (\code{mmhc}), that performs a statistical
+#' sieving of the search space followed by a greedy evaluation, by combining the MMPC and the HC algorithms.
+#' It is considerably faster than the complete method, at the cost of a (likely)
+#' lower quality. As for MMPC, the computational time depends on the density of the network, the number of observations and
+#' the tuning of the parameters.
+#' 
+#' The fifth method is the Structural Expectation-Maximization (\code{sem}) algorithm,
 #' for learning a network from a dataset with missing values. It iterates a sequence of Expectation-Maximization (in order to ``fill in''
 #' the holes in the dataset) and structure learning from the guessed dataset, until convergence. The structure learning used inside SEM,
 #' due to computational reasons, is MMHC. Convergence of SEM can be controlled with the parameters \code{struct.threshold}
@@ -37,23 +45,29 @@
 #' \code{AIC} (Akaike Information Criterion) and \code{BIC} (Bayesian Information Criterion). The scoring function
 #' can be chosen using the \code{scoring.func} parameter.
 #' 
-#' Then, the parameters of the network are learnt using MAP (Maximum A Posteriori) estimation (if not using bootstrap).
+#' Structure learning sets the \code{dag} field of the \code{BN} under study, unless bootstrap or the \code{mmpc} algorithm
+#' are employed. In these cases, given the possible presence of loops, the \code{wpdag} field is set.
+#'
+#' In case of missing data, the default behaviour (with no other indication from the user)
+#' is to learn the structure using \code{mmhc} starting from the raw dataset, using only the
+#' available cases with no imputation.
+#'  
+#' Then, the parameters of the network are learnt using MAP (Maximum A Posteriori) estimation (when not using bootstrap or \code{mmpc}).
 #' 
 #' See documentation for \code{\link{learn.structure}} and \code{\link{learn.params}} for more informations.
-#' 
+#'
 #' @name learn.network
 #' @rdname learn.network
 #' 
 #' @param x can be a \code{\link{BN}} or a \code{\link{BNDataset}}. If \code{x} is a \code{\link{BN}},
 #' then also the \code{dataset} parameter must be given.
 #' @param y a \code{\link{BNDataset}} object, to be provided only if \code{x} is a \code{\link{BN}}.
-#' @param algo the algorithm to use. Currently, one among:
-#'        \code{sm} (Silander-Myllymaki),
-#'        \code{mmhc} (Max-Min Hill Climbing, default) and
-#'        \code{sem} (Structural Expectation Maximization).
+#' @param algo the algorithm to use. Currently, one among \code{sm} (Silander-Myllymaki), \code{mmpc}
+#'        (Max-Min Parent-and-Children), \code{mmhc} (Max-Min Hill Climbing, default), \code{hc}
+#'        (Hill Climbing) and \code{sem} (Structural Expectation Maximization).
 #' @param scoring.func the scoring function to use. Currently, one among
 #'        \code{BDeu}, \code{AIC}, \code{BIC}.
-#' @param initial.network network srtructure to be used as starting point for structure search.
+#' @param initial.network network structure to be used as starting point for structure search.
 #'        Can take different values:
 #'        a \code{BN} object, a matrix containing the adjacency matrix of the structure of the network,
 #'        or the string \code{random.chain} to sample a random chain as starting point.
@@ -102,6 +116,9 @@ setGeneric("learn.network", function(x, ...)#dataset, algo="mmhc", scoring.func=
 #' Learn the parameters of a \link{BN} object according to a \link{BNDataset}
 #' using MAP (Maximum A Posteriori) estimation.
 #' 
+#' Parameter learning is not possible in case of networks learnt using the \code{mmpc} algorithm,
+#' or from bootstrap samples, as there may be loops.
+#' 
 #' @name learn.params
 #' @rdname learn.params
 #' 
@@ -139,13 +156,26 @@ setGeneric("learn.params", function(bn, dataset, ess=1, use.imputed.data=F) stan
 #' meaningful parameters such as the layering of the nodes, or the maximum number of parents -- refer to the 
 #' documentation in package manual for more details on the method parameters.
 #' 
-#' The second algorithm (and the default one) is the Max-Min Hill-Climbing heuristic (\code{mmhc}), that performs a statistical
-#' sieving of the search space followed by a greedy evaluation. It is considerably faster than the complete method, at the cost of a (likely)
-#' lower quality. Also note that in the case of a very dense network and lots of obsevations, the statistical evaluation
+#' The second method is the constraint-based Max-Min Parents-and-Children (\code{mmpc}), that returns the skeleton of the network.
+#' Given the possible presence of loops, due to the non-directionality of the edges discovered, no parameter learning
+#' is possible using this algorithm. Also note that in the case of a very dense network and lots of obsevations, the statistical evaluation
 #' of the search space may take a long time. Also for this algorithm there are parameters that may need to be tuned,
-#' mainly the confidence threshold of the statistical pruning.
+#' mainly the confidence threshold of the statistical pruning. Please refer to the rest of this documentation for their explanation.
 #' 
-#' The third method is the Structural Expectation-Maximization (\code{sem}) algorithm,
+#' The third algorithm is another heuristic, the Hill-Climbing (\code{hc}). It can start from the complete space of possibilities
+#' (default) or from a reduced subset of possible edges, using the \code{cpc} argument.
+#' 
+#' The fourth algorithm (and the default one) is the Max-Min Hill-Climbing heuristic (\code{mmhc}), that performs a statistical
+#' sieving of the search space followed by a greedy evaluation, by combining the MMPC and the HC algorithms.
+#' It is considerably faster than the complete method, at the cost of a (likely)
+#' lower quality. As for MMPC, the computational time depends on the density of the network, the number of observations and
+#' the tuning of the parameters.
+#' 
+#' The fifth method is the Structural Expectation-Maximization (\code{sem}) algorithm,
+#' for learning a network from a dataset with missing values. It iterates a sequence of Expectation-Maximization (in order to ``fill in''
+#' the holes in the dataset) and structure learning from the guessed dataset, until convergence. The structure learning used inside SEM,
+#' due to computational reasons, is MMHC. Convergence of SEM can be controlled with the parameters \code{struct.threshold}
+#' and \code{param.threshold}, for the structure and the parameter convergence, respectively.
 #' for learning a network from a dataset with missing values. It iterates a sequence of Expectation-Maximization (in order to ``fill in''
 #' the holes in the dataset) and structure learning from the guessed dataset, until convergence. The structure learning used inside SEM,
 #' due to computational reasons, is MMHC. Convergence of SEM can be controlled with the parameters \code{struct.threshold}
@@ -156,13 +186,20 @@ setGeneric("learn.params", function(bn, dataset, ess=1, use.imputed.data=F) stan
 #' \code{AIC} (Akaike Information Criterion) and \code{BIC} (Bayesian Information Criterion). The scoring function
 #' can be chosen using the \code{scoring.func} parameter.
 #' 
+#' Structure learning sets the \code{dag} field of the \code{BN} under study, unless bootstrap or the \code{mmpc} algorithm
+#' are employed. In these cases, given the possible presence of loops, the \code{wpdag} field is set.
+#' 
+#' In case of missing data, the default behaviour (with no other indication from the user)
+#' is to learn the structure using \code{mmhc} starting from the raw dataset.
+#' 
 #' @name learn.structure
 #' @rdname learn.structure
 #' 
 #' @param bn a \code{\link{BN}} object.
 #' @param dataset a \code{\link{BNDataset}}.
-#' @param algo the algorithm to use. Currently, one among \code{sm} (Silander-Myllymaki), \code{mmhc}
-#'        (Max-Min Hill Climbing, default) and \code{sem} (Structural Expectation Maximization).
+#' @param algo the algorithm to use. Currently, one among \code{sm} (Silander-Myllymaki), \code{mmpc}
+#'        (Max-Min Parent-and-Children), \code{mmhc} (Max-Min Hill Climbing, default), \code{hc}
+#'        (Hill Climbing) and \code{sem} (Structural Expectation Maximization).
 #' @param scoring.func the scoring function to use. Currently, one among \code{BDeu}, \code{AIC}, \code{BIC}.
 #' @param initial.network network srtructure to be used as starting point for structure search.
 #'        Can take different values:
@@ -264,11 +301,13 @@ setGeneric("get.most.probable.values", function(x) standardGeneric("get.most.pro
 #' @rdname sample.row
 #' 
 #' @param x a \code{\link{BN}} or \code{\link{InferenceEngine}} object.
+#' @param mar fraction [0,1] of missing values in the sampled vector 
+#' (missing at random), default value is 0 (no missing values).
 #' 
 #' @return a vector of values.
 #' 
 #' @exportMethod sample.row
-setGeneric("sample.row", function(x) standardGeneric("sample.row"))
+setGeneric("sample.row", function(x, mar=0) standardGeneric("sample.row"))
 
 
 #' sample a \code{\link{BNDataset}} from a network of an inference engine.
@@ -278,11 +317,13 @@ setGeneric("sample.row", function(x) standardGeneric("sample.row"))
 #' 
 #' @param x a \code{\link{BN}} or \code{\link{InferenceEngine}} object.
 #' @param n number of items to sample.
+#' @param mar fraction [0,1]  of missing values in the sampled dataset 
+#' (missing at random), default value is 0 (no missing values).
 #' 
 #' @return a \code{\link{BNDataset}}
 #' 
 #' @exportMethod sample.dataset
-setGeneric("sample.dataset", function(x, n=100) standardGeneric("sample.dataset"))
+setGeneric("sample.dataset", function(x, n=100, mar=0) standardGeneric("sample.dataset"))
 
 
 #' compute the list of inferred marginals of a BN.
@@ -410,6 +451,28 @@ setGeneric("read.net", function(x) standardGeneric("read.net"))
 #' 
 #' @exportMethod write.dsc
 setGeneric("write.dsc", function(x, path="./") standardGeneric("write.dsc"))
+
+
+#' Write a network saving it in an \code{XGMML} file.
+#' 
+#' Write a network on disk, saving it in an \code{XGMML} file,
+#' for importing it in Cytoscape.
+#' 
+#' @name write.xgmml
+#' @rdname write.xgmml
+#' 
+#' @param x the \code{\link{BN}} object.
+#' @param filename file name (with relative or absolute path) to be written.
+#' @param write.wpdag write the weighted PDAG computed using bootstrap samples or the MMPC 
+#' structure algorithm, instead of the normaldag (default FALSE).
+#' @param node.col vector of colors for each node of the network (in R colornames).
+#' @param frac frac minimum fraction [0,1] of presence of an edge to be plotted (used in case of \code{write.wpdag=TRUE}).
+#' @param max.weight maximum possible weight of an edge (used in case of \code{write.wpdag=TRUE}).
+#' 
+#' @exportMethod write.xgmml
+setGeneric("write.xgmml", function(x, filename="./", write.wpdag=FALSE,
+                                   node.col=rep("white",num.nodes(x)), frac=0.2,
+                                   max.weight=max(wpdag(x))) standardGeneric("write.xgmml"))
 
 
 #' Read the scoring function used to learn the structure of a network.

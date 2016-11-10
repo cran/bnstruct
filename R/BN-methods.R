@@ -493,10 +493,10 @@ setMethod("print",
 #' @param x a \code{\link{BN}} object.
 #' @param ... potential further arguments for methods.
 #' @param use.node.names \code{TRUE} if node names have to be printed. If \code{FALSE}, numbers are used instead.
-#' @param frac fraction
-#' @param max.weight max.weight
 #' @param node.col list of (\code{R}) colors for the nodes.
 #' @param plot.wpdag if \code{TRUE} plot the network according to the WPDAG computed using bootstrap instead of the DAG.
+#' @param frac minimum fraction [0,1] of presence of an edge to be plotted (used in case of \code{plot.wpdag=TRUE}).
+#' @param max.weight maximum possible weight of an edge (used in case of \code{plot.wpdag=TRUE}).
 #' 
 #' @importFrom graphics plot
 #' @importFrom grDevices colors dev.off postscript
@@ -507,7 +507,7 @@ setMethod("print",
 #' @export
 plot.BN <- 
   function( x, ..., use.node.names = TRUE, frac = 0.2, 
-                    max.weight = max(dag(x)), node.col = rep('white',ncol(dag(x))),
+                    max.weight = max(dag(x)), node.col = rep('white',num.nodes(x)),
                     plot.wpdag = FALSE)
           {
             
@@ -593,7 +593,13 @@ setMethod("save.to.eps",
 #' @rdname sample.row
 #' @aliases sample.row,BN
 setMethod("sample.row", "BN",
-          function(x){
+          function(x, mar=0){
+            
+            if (mar < 0 || mar > 1) {
+              bnstruct.log("warning: non-admissible value for mar, set to 0")
+              mar <- 0
+            }
+            
             bn   <- x
             dag  <- dag(bn)
             cpts <- cpts(bn)
@@ -634,6 +640,11 @@ setMethod("sample.row", "BN",
                 mpv[node] <- sample(1:node.sizes[node], 1, replace=T, prob=cpt)
               }
             }
+            
+            if (mar > 0) {            
+              missing.prob <- runif(num.nodes, 0, 1)
+              mpv[which(missing.prob < mar)] <- NA
+            }
                 
             return(mpv)
           })
@@ -642,13 +653,18 @@ setMethod("sample.row", "BN",
 #' @rdname sample.dataset
 #' @aliases sample.dataset,BN
 setMethod("sample.dataset",c("BN"),
-          function(x, n = 100)
+          function(x, n = 100, mar=0)
           {
+            if (mar < 0 || mar > 1) {
+              bnstruct.log("warning: non-admissible value for mar, set to 0")
+              mar <- 0
+            }
+            
             num.nodes <- num.nodes(x)          
             obs <- matrix(rep(0, num.nodes * n), nrow = n, ncol = num.nodes)
             
             for (i in 1:n)
-              obs[i,] <- sample.row(x)
+              obs[i,] <- sample.row(x, mar)
             
             storage.mode(obs) <- "integer"
             

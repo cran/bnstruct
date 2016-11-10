@@ -1,56 +1,7 @@
-\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-
-\usepackage{framed}
-\makeatletter
-\newenvironment{kframe}{%
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
-\makeatother
-
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
-
-\usepackage{alltt}
-% \VignetteIndexEntry{\texttt{bnstruct}: an R package for Bayesian Network Structure Learning}
-% \VignettePackage{bnstruct}
-% \VignetteKeywords{Documentation}
+\documentclass{article}
+%\VignetteIndexEntry{\texttt{bnstruct}: an R package for Bayesian Network Structure Learning}
+%\VignettePackage{bnstruct}
+%\VignetteKeywords{Documentation}
 %\VignetteEngine{knitr::knitr}
 \usepackage{url}
 \usepackage[numbers]{natbib}\citeindextrue
@@ -61,17 +12,27 @@
 \newcommand{\Rmethod}[1]{{\texttt{#1}}}
 \newcommand{\Rfunarg}[1]{{\texttt{#1}}}
 \newcommand{\Rclass}[1]{{\textit{#1}}}
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
 \begin{document}
 
-
+<<include=FALSE>>=
+library(knitr)
+opts_chunk$set(
+concordance=TRUE,
+prompt=TRUE,
+error=TRUE,
+comment=""
+)
+@
 
 
 \title{\texttt{bnstruct}: an R package for Bayesian Network Structure Learning with missing data}
 \author{Francesco Sambo, Alberto Franzin}
 \maketitle
 
-
+<<echo=FALSE,include=FALSE>>=
+library(bnstruct)
+@
 
 \section{Introduction}
 Bayesian Networks (\citet{pearl1988probabilistic}) are a powerful tool for probabilistic inference among a set
@@ -174,26 +135,18 @@ $Y$ change, given that variable $X$ is taking value $x\prime$?''.
 \section{Installation}
 The latest stable version of the package is available on CRAN \url{https://cran.r-project.org},
 and can therefore be installed from an R session using
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlkwd{install.packages}\hlstd{(}\hlstr{"bnstruct"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<installcran,eval=FALSE>>=
+install.packages("bnstruct")
+@
 
 The latest development version of \Rpackage{bnstruct} can be found at \url{http://github.com/sambofra/bnstruct}.
 
 In order to install the package, it suffices to open a shell and run
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+<<installmake,engine='bash',eval=FALSE>>=
 git clone https://github.com/sambofra/bnstruct.git
 cd bnstruct
 make install
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+@
 
 \Rpackage{bnstruct} requires R $\geq 2.10$,
 and depends on \Rpackage{bitops}, \Rpackage{igraph}, \Rpackage{Matrix} and \Rpackage{methods}.
@@ -210,19 +163,15 @@ There are two ways to build a BNDataset: using two files containing respectively
 and data, and manually providing the data table and the related header informations
 (variable names, cardinality and discreteness).
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset.from.data} \hlkwb{<-} \hlkwd{BNDataset}\hlstd{(}\hlkwc{data} \hlstd{= data,}
-\hlstd{+ }                               \hlkwc{discreteness} \hlstd{=} \hlkwd{rep}\hlstd{(}\hlstr{'d'}\hlstd{,}\hlnum{4}\hlstd{),}
-\hlstd{+ }                               \hlkwc{variables} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"a"}\hlstd{,} \hlstr{"b"}\hlstd{,} \hlstr{"c"}\hlstd{,} \hlstr{"d"}\hlstd{),}
-\hlstd{+ }                               \hlkwc{node.sizes} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{8}\hlstd{,}\hlnum{12}\hlstd{,}\hlnum{16}\hlstd{))}
-\hlstd{> }
-\hlstd{> }\hlstd{dataset.from.file} \hlkwb{<-} \hlkwd{BNDataset}\hlstd{(}\hlstr{"path/to/data.file"}\hlstd{,}
-\hlstd{+ }                               \hlstr{"path/to/header.file"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<bndataset.constructor, eval=FALSE>>=
+dataset.from.data <- BNDataset(data = data,
+                               discreteness = rep('d',4),
+                               variables = c("a", "b", "c", "d"),
+                               node.sizes = c(4,8,12,16))
+
+dataset.from.file <- BNDataset("path/to/data.file",
+                               "path/to/header.file")
+@
 
 The key informations needed are:
 \begin{enumerate}
@@ -272,29 +221,21 @@ We provide two sample datasets, one with complete data (the \texttt{Asia} networ
 (the \texttt{Child} network, \citet*{spiegelhalter1993bayesian}), in the \texttt{extdata} subfolder;
 the user can refer to them as an example. The two datasets have been created with
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{asia} \hlkwb{<-} \hlkwd{BNDataset}\hlstd{(}\hlstr{"asia_10000.data"}\hlstd{,}
-\hlstd{+ }                  \hlstr{"asia_10000.header"}\hlstd{,}
-\hlstd{+ }                  \hlkwc{starts.from}\hlstd{=}\hlnum{0}\hlstd{)}
-\hlstd{> }\hlstd{child} \hlkwb{<-} \hlkwd{BNDataset}\hlstd{(}\hlstr{"Child_data_na_5000.data"}\hlstd{,}
-\hlstd{+ }                   \hlstr{"Child_data_na_5000.header"}\hlstd{,}
-\hlstd{+ }                   \hlkwc{starts.from}\hlstd{=}\hlnum{0}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<create.sample.datasets, eval=FALSE>>=
+asia <- BNDataset("asia_10000.data",
+                  "asia_10000.header",
+                  starts.from=0)
+child <- BNDataset("Child_data_na_5000.data",
+                   "Child_data_na_5000.header",
+                   starts.from=0)
+@
 
 and are also available with
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{asia}  \hlkwb{<-} \hlkwd{asia}\hlstd{()}
-\hlstd{> }\hlstd{child} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<sample.datasets.accessors,eval=FALSE>>=
+asia  <- asia()
+child <- child()
+@
 
 
 % \subsection{Importing a dataset}
@@ -341,15 +282,11 @@ and unobserved values for otherwise observed variables. We currently deal only w
 second kind of missing data. The process of guessing the missing values is called \emph{imputation}.
 
 We provide the \Rmethod{impute} function to perform imputation.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{BNDataset}\hlstd{(}\hlkwc{data.file}   \hlstd{=} \hlstr{"path/to/file.data"}\hlstd{,}
-\hlstd{+ }                     \hlkwc{header.file} \hlstd{=} \hlstr{"path/to/file.header"}\hlstd{)}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{impute}\hlstd{(dataset)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<imputation1,eval=FALSE>>=
+dataset <- BNDataset(data.file   = "path/to/file.data",
+                     header.file = "path/to/file.header")
+dataset <- impute(dataset)
+@
 
 Imputation is accomplished with the k-Nearest Neighbour algorithm. The number of neighbours to be used
 can be chosen specifying the \Rfunarg{k.impute} parameter (default is \Rfunarg{k.impute = 10}). Given that
@@ -363,18 +300,14 @@ Samples for imputed data are generated by imputing the corresponding sample of r
 Therefore, by requesting imputed samples, also the raw samples will be generated.
 
 We provide the \Rmethod{bootstrap} method for this.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{BNDataset}\hlstd{(}\hlstr{"path/to/file.data"}\hlstd{,}
-\hlstd{+ }                     \hlstr{"path/to/file.header"}\hlstd{)}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{bootstrap}\hlstd{(dataset,} \hlkwc{num.boots} \hlstd{=} \hlnum{100}\hlstd{)}
-\hlstd{> }\hlstd{dataset.with.imputed.samples} \hlkwb{<-} \hlkwd{bootstrap}\hlstd{(dataset,}
-\hlstd{+ }                                          \hlkwc{num.boots} \hlstd{=} \hlnum{100}\hlstd{,}
-\hlstd{+ }                                          \hlkwc{imputation} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<bootstrap1,eval=FALSE>>=
+dataset <- BNDataset("path/to/file.data",
+                     "path/to/file.header")
+dataset <- bootstrap(dataset, num.boots = 100)
+dataset.with.imputed.samples <- bootstrap(dataset,
+                                          num.boots = 100,
+                                          imputation = TRUE)
+@
 
 \subsection{Using data}
 \label{sec:usingdata}
@@ -384,16 +317,12 @@ in the package documentation; we are not going to cover all of the methods in th
 of examples.
 
 For example, one may want to see the dataset.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlcom{# the following are equivalent:}
-\hlstd{> }\hlkwd{print}\hlstd{(dataset)}
-\hlstd{> }\hlkwd{show}\hlstd{(dataset)}
-\hlstd{> }\hlstd{dataset} \hlcom{# from inside an R session}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<dataset.print,eval=FALSE>>=
+# the following are equivalent:
+print(dataset)
+show(dataset)
+dataset # from inside an R session
+@
 The \Rmethod{show()} method is an alias for the \Rmethod{print()} method, but allows to print the state of an instance of an object
 just by typing its name in an \texttt{R} session.
 
@@ -405,113 +334,38 @@ To avoid an abrupt termination of the execution in case of error, one may run th
 the presence of data before attempting to retrieve it, using the tester methods \Rmethod{has.raw.data} and
 \Rmethod{has.imputed.data}.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlkwd{options}\hlstd{(}\hlkwc{max.print} \hlstd{=} \hlnum{200}\hlstd{,} \hlkwc{width} \hlstd{=} \hlnum{60}\hlstd{)}
-\hlstd{> }
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }\hlcom{# if we want raw data}
-\hlstd{> }\hlkwd{raw.data}\hlstd{(dataset)}
-\end{alltt}
-\begin{verbatim}
-        V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15
-   [1,]  2  3  3 NA  1 NA  1  1  2   1   1   1  NA   2   2
-   [2,] NA NA  2  1  1  2  1  2  2   1   2   1   2   2  NA
-   [3,]  2  3  1  2  1 NA NA  2  2   1   2   2   2   2   2
-   [4,]  2  4  1  1  1  3 NA  1  2  NA   3  NA   1   2   1
-   [5,]  2  2  1 NA  2  4  1  1  1   1  NA   1  NA   2  NA
-   [6,] NA  2 NA  2  1  4 NA  3  2   1   3   1   3   2   2
-   [7,]  2  2  1  2 NA  4 NA  3 NA   1  NA   1   1  NA  NA
-   [8,] NA  1  1 NA  3  1  1  1  2   2   2   1   4   2   2
-   [9,]  2  3  2  2  1  3  1  2  2   1   2   1   2   2   2
-  [10,]  2  4  1  1  1  3 NA NA  2  NA   3   3   2   2   1
-        V16 V17 V18 V19 V20
-   [1,]   2   3   2   1   2
-   [2,]   2   2   1   2   2
-   [3,]   1   2   1   2   2
-   [4,]   3   1  NA   1  NA
-   [5,]  NA   1   1   2   2
-   [6,]   2   1   1   3   2
-   [7,]  NA   1   1   1  NA
-   [8,]   1   1  NA   4  NA
-   [9,]  NA   1   1   2   2
-  [10,]   1   1   2   2  NA
- [ reached getOption("max.print") -- omitted 4990 rows ]
-\end{verbatim}
-\begin{alltt}
-\hlstd{> }\hlcom{# if we want imputed dataset: this raises an error}
-\hlstd{> }\hlkwd{imputed.data}\hlstd{(dataset)}
-\end{alltt}
+<<getdata1,eval=TRUE,cache=TRUE>>=
+options(max.print = 200, width = 60)
 
+dataset <- child()
+# if we want raw data
+raw.data(dataset)
 
-{\ttfamily\noindent\bfseries\color{errorcolor}{Error in imputed.data(dataset): The dataset contains no imputed data. Please impute data before learning.\\See > ?impute for help.}}\begin{alltt}
-\hlstd{> }\hlcom{# with tryCatch we manage the error}
-\hlstd{> }\hlkwd{tryCatch}\hlstd{(}
-\hlstd{+ }  \hlstd{imp.data} \hlkwb{<-} \hlkwd{imputed.data}\hlstd{(dataset),}
-\hlstd{+ }  \hlkwc{error} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{e}\hlstd{) \{}
-\hlstd{+ }    \hlkwd{cat}\hlstd{(}\hlstr{"Hey! Something went wrong. No imputed data present maybe?"}\hlstd{)}
-\hlstd{+ }    \hlstd{imp.data} \hlkwb{<<-} \hlkwa{NULL}
-\hlstd{+ }  \hlstd{\}}
-\hlstd{+ }\hlstd{)}
-\end{alltt}
-\begin{verbatim}
-Hey! Something went wrong. No imputed data present maybe?
-\end{verbatim}
-\begin{alltt}
-\hlstd{> }\hlstd{imp.data}
-\end{alltt}
-\begin{verbatim}
-NULL
-\end{verbatim}
-\begin{alltt}
-\hlstd{> }\hlcom{# test before trying}
-\hlstd{> }\hlkwa{if} \hlstd{(}\hlkwd{has.imputed.data}\hlstd{(dataset)) \{}
-\hlstd{+ }  \hlstd{imp.data} \hlkwb{<-} \hlkwd{imputed.data}\hlstd{(dataset)}
-\hlstd{+ }\hlstd{\}} \hlkwa{else} \hlstd{\{}
-\hlstd{+ }  \hlstd{imp.data} \hlkwb{<-} \hlkwa{NULL}
-\hlstd{+ }\hlstd{\}}
-\hlstd{> }\hlstd{imp.data}
-\end{alltt}
-\begin{verbatim}
-NULL
-\end{verbatim}
-\begin{alltt}
-\hlstd{> }\hlcom{# now perform imputation on the dataset}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{impute}\hlstd{(dataset)}
-\end{alltt}
+# if we want imputed dataset: this raises an error
+imputed.data(dataset)
 
+# with tryCatch we manage the error
+tryCatch(
+  imp.data <- imputed.data(dataset),
+  error = function(e) {
+    cat("Hey! Something went wrong. No imputed data present maybe?")
+    imp.data <<- NULL
+  }
+)
+imp.data
 
-{\ttfamily\noindent\itshape\color{messagecolor}{bnstruct :: performing imputation ...\\bnstruct :: imputation finished.}}\begin{alltt}
-\hlstd{> }\hlkwd{imputed.data}\hlstd{(dataset)}
-\end{alltt}
-\begin{verbatim}
-        V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15
-   [1,]  2  3  3  2  1  3  1  1  2   1   1   1   1   2   2
-   [2,]  2  4  2  1  1  2  1  2  2   1   2   1   2   2   1
-   [3,]  2  3  1  2  1  3  1  2  2   1   2   2   2   2   2
-   [4,]  2  4  1  1  1  3  1  1  2   1   3   1   1   2   1
-   [5,]  2  2  1  2  2  4  1  1  1   1   3   1   1   2   2
-   [6,]  2  2  1  2  1  4  1  3  2   1   3   1   3   2   2
-   [7,]  2  2  1  2  2  4  1  3  2   1   3   1   1   2   2
-   [8,]  2  1  1  2  3  1  1  1  2   2   2   1   4   2   2
-   [9,]  2  3  2  2  1  3  1  2  2   1   2   1   2   2   2
-  [10,]  2  4  1  1  1  3  1  2  2   1   3   3   2   2   1
-        V16 V17 V18 V19 V20
-   [1,]   2   3   2   1   2
-   [2,]   2   2   1   2   2
-   [3,]   1   2   1   2   2
-   [4,]   3   1   1   1   2
-   [5,]   1   1   1   2   2
-   [6,]   2   1   1   3   2
-   [7,]   1   1   1   1   2
-   [8,]   1   1   1   4   2
-   [9,]   1   1   1   2   2
-  [10,]   1   1   2   2   2
- [ reached getOption("max.print") -- omitted 4990 rows ]
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+# test before trying
+if (has.imputed.data(dataset)) {
+  imp.data <- imputed.data(dataset)
+} else {
+  imp.data <- NULL
+}
+imp.data
+
+# now perform imputation on the dataset
+dataset <- impute(dataset)
+imputed.data(dataset)
+@
 
 Complete cases of the raw dataset, that is, rows that have no missing data, can be selected with the \Rmethod{complete} method. Please note that this method returns a new copy of the original
 \Robject{BNDataset} with no imputed data or bootstrap samples (if previously generated), as it
@@ -520,16 +374,12 @@ It is possible to restrict the completeness requirement only to a subset of vari
 
 By default, learning operations on the raw dataset operate with available cases.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{complete.subset} \hlkwb{<-} \hlkwd{complete}\hlstd{(dataset)}
-\hlstd{> }
-\hlstd{> }\hlcom{# require completeness only on a subset of variables}
-\hlstd{> }\hlstd{complete.subset} \hlkwb{<-} \hlkwd{complete}\hlstd{(dataset,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{7}\hlstd{))}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<completecases,eval=FALSE,cache=T>>=
+complete.subset <- complete(dataset)
+
+# require completeness only on a subset of variables
+complete.subset <- complete(dataset, c(1,4,7))
+@
 
 
 In order to retrieve bootstrap samples, one can use the \Rmethod{boots} and \Rmethod{imp.boots} methods for samples
@@ -539,25 +389,17 @@ or sample index out of range) will raise an error. The method \Rmethod{num.boots
 
 We also provide the \Rmethod{boot} method to directly access a single sample.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlcom{# get raw samples}
-\hlstd{> }\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{num.boots}\hlstd{(dataset))}
-\hlstd{+ }  \hlkwd{print}\hlstd{(} \hlkwd{boot}\hlstd{(dataset, i) )}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<getboot,eval=FALSE>>=
+# get raw samples
+for (i in 1:num.boots(dataset))
+  print( boot(dataset, i) )
+@
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlcom{# get imputed samples}
-\hlstd{> }\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{num.boots}\hlstd{(dataset))}
-\hlstd{+ }  \hlkwd{print}\hlstd{(} \hlkwd{boot}\hlstd{(dataset, i,} \hlkwc{use.imputed.data} \hlstd{=} \hlnum{TRUE}\hlstd{) )}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<getboot.1,eval=FALSE>>=
+# get imputed samples
+for (i in 1:num.boots(dataset))
+  print( boot(dataset, i, use.imputed.data = TRUE) )
+@
 
 \subsection{More advanced functions}
 It is also possible to manage the single fields of a \Robject{BNDataset}. See \texttt{?BNDataset}
@@ -572,14 +414,10 @@ the directed acyclic graph (DAG) representing the structure of the network, the 
 the network, and the weighted partially DAG representing the structure as learnt using bootstrap samples.
 
 The following code will create a \Robject{BN} object for the \texttt{Child} network, with no structure nor parameters.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }\hlstd{net}     \hlkwb{<-} \hlkwd{BN}\hlstd{(dataset)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<bn2, eval=FALSE>>=
+dataset <- child()
+net     <- BN(dataset)
+@
 Then we can fill in the fields of \Rmethod{net} by hand. See the inline help for more details.
 
 The method of choice to create a \Robject{BN} object is, however, to create it from a \Robject{BNDataset} using the
@@ -589,14 +427,10 @@ The method of choice to create a \Robject{BN} object is, however, to create it f
 When constructing a network starting from a dataset, the first operation we may want to perform is to learn
 a network that may have generated that dataset, in particular its structure and its parameters.
 \Rpackage{bnstruct} provides the \Rmethod{learn.network} method for this task.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }\hlstd{net}     \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<learn.network, eval=FALSE>>=
+dataset <- child()
+net     <- learn.network(dataset)
+@
 
 The \Rmethod{learn.network} method returns a new \Robject{BN} object, with a new DAG (or WPDAG, if the structure
 learning has been performed using bootstrap -- more on this later).
@@ -604,7 +438,7 @@ learning has been performed using bootstrap -- more on this later).
 Here we briefly describe the two tasks performed by the method, along with the main options.
 
 \subsubsection{Structure learning}
-We provide three algorithms in order to learn the structure of the network, that can be chosen with the \texttt{algo} parameter.
+We provide five algorithms to learn the structure of the network, that can be chosen with the \texttt{algo} parameter.
 The first is the Silander-Myllym\"aki (\texttt{sm})
 exact search-and-score algorithm (see \citet*{silander2012simple}), that performs a complete evaluation of the search space in order to discover
 the best network; this algorithm may take a very long time, and can be inapplicable when discovering networks
@@ -612,13 +446,21 @@ with more than 25--30 nodes. Even for small networks, users are strongly encoura
 meaningful parameters such as the layering of the nodes, or the maximum number of parents -- refer to the 
 documentation in package manual for more details on the method parameters.
 
-The second algorithm (and the default one) is the Max-Min Hill-Climbing heuristic (\texttt{mmhc}, see \citet*{tsamardinos2006max}), that performs a statistical
-sieving of the search space followed by a greedy evaluation. It is considerably faster than the complete method, at the cost of a (likely)
-lower quality. Also note that in the case of a very dense network and lots of obsevations, the statistical evaluation
-of the search space may take a long time. Also for this algorithm there are parameters that may need to be tuned,
-mainly the confidence threshold of the statistical pruning.
+The second algorithm is the Max-Min Parent-and-Children (\texttt{mmpc}, see \citet*{tsamardinos2006max}), a
+constraint-based heuristic approach that discovers the \emph{skeleton} of the network, that is, the set of edges
+connecting the variables without discovering their directionality.
 
-The third method is the Structural Expectation-Maximization (\texttt{sem}) algorithm (\citet{friedman1997learning,friedman1998bayesian}),
+Another heuristic algorithm included is a Hill Climbing method (\texttt{hc}, see \citet*{tsamardinos2006max}).
+
+The fourth algorithm (and the default one) is the Max-Min Hill-Climbing heuristic (\texttt{mmhc}, \citet*{tsamardinos2006max}),
+based on the combination of the previous two algorithms, that performs a statistical
+sieving of the search space followed by a greedy evaluation. 
+
+The heuristic algorithms provided are considerably faster than the complete method, at the cost of a (likely)
+lower quality. Also note that in the case of a very dense network and lots of obsevations, the statistical evaluation
+of the search space may take a long time.% Also for these algorithms there are parameters that may need to be tuned.
+
+The last method is the Structural Expectation-Maximization (\texttt{sem}) algorithm (\citet{friedman1997learning,friedman1998bayesian}),
 for learning a network from a dataset with missing values. It iterates a sequence of Expectation-Maximization (in order to ``fill in''
 the holes in the dataset) and structure learning from the guessed dataset, until convergence. The structure learning used inside SEM,
 due to computational reasons, is MMHC. Convergence of SEM can be controlled with the parameters \Rfunarg{struct.threshold},
@@ -630,21 +472,17 @@ We provide three of the most popular scoring functions, \texttt{BDeu} (Bayesian-
 \texttt{AIC} (Akaike Information Criterion) and \texttt{BIC} (Bayesian Information Criterion). The scoring function
 can be chosen using the \texttt{scoring.func} parameter.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }\hlstd{net.1}   \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset,}
-\hlstd{+ }                         \hlkwc{algo} \hlstd{=} \hlstr{"sem"}\hlstd{,}
-\hlstd{+ }                         \hlkwc{scoring.func} \hlstd{=} \hlstr{"AIC"}\hlstd{)}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{impute}\hlstd{(dataset)}
-\hlstd{> }\hlstd{net.2}   \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset,}
-\hlstd{+ }                         \hlkwc{algo} \hlstd{=} \hlstr{"mmhc"}\hlstd{,}
-\hlstd{+ }                         \hlkwc{scoring.func} \hlstd{=} \hlstr{"BDeu"}\hlstd{,}
-\hlstd{+ }                         \hlkwc{use.imputed.data} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<learn.network.2, eval=FALSE>>=
+dataset <- child()
+net.1   <- learn.network(dataset,
+                         algo = "sem",
+                         scoring.func = "AIC")
+dataset <- impute(dataset)
+net.2   <- learn.network(dataset,
+                         algo = "mmhc",
+                         scoring.func = "BDeu",
+                         use.imputed.data = TRUE)
+@
 
 It is also possible to provide an initial network as starting point for the structure search. This can be
 done using the \texttt{initial.network} argument, which accepts three kinds of inputs:
@@ -657,32 +495,26 @@ done using the \texttt{initial.network} argument, which accepts three kinds of i
 In order to obtain reproducible results, in case a random chain is used it is possible to provide an
 initial random seed.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }\hlstd{net.1}   \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset,}
-\hlstd{+ }                         \hlkwc{initial.network} \hlstd{=} \hlstr{"random.chain"}\hlstd{,}
-\hlstd{+ }                         \hlkwc{seed} \hlstd{=} \hlnum{12345}\hlstd{)}
-\hlstd{> }\hlstd{net.2}   \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset,}
-\hlstd{+ }                         \hlkwc{algo} \hlstd{=} \hlstr{"sem"}\hlstd{,}
-\hlstd{+ }                         \hlkwc{initial.network} \hlstd{= net.1)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<learn.network.chain, eval=FALSE>>=
+dataset <- child()
+net.1   <- learn.network(dataset,
+                         initial.network = "random.chain",
+                         seed = 12345)
+net.2   <- learn.network(dataset,
+                         algo = "sem",
+                         initial.network = net.1)
+@
 
 Prior knowledge can be given to the learning algorithm, by providing a \textit{layering} of the variables.
 Variables can be grouped in (numbered) layers, and a variable can only have parents in upper (lower-numbered) layers. In order to specify this in the learning step, one supplementary argument has to be provided: \texttt{layering}, a vector containing the indices of the layers of each variable. By default, the first layer contains variables with no parents, and variables in layer $j$ can have parents only in layers $i \leq j$.
+Layering is useful also in case of a Naive Bayes network, or when learning a Dynamic Bayesian Network,
+where each time frame can be associated to a layer. An example of learning a Naive Bayes network is given in Section \ref{sec:naivebayes}.
 
 In case of more sophisticated requirements, some other optional arguments can be provided: \Rfunarg{max.fanin.layers} and \Rfunarg{max.fanin} for \Rfunarg{sm}, \Rfunarg{layer.struct} for \Rfunarg{mmhc} (see method documentation).
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{layers} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{5}\hlstd{)}
-\hlstd{> }\hlstd{net.layer} \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset,} \hlkwc{layering} \hlstd{= layers)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<layering,eval=F>>=
+layers <- c(1,2,3,3,3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5)
+net.layer <- learn.network(dataset, layering = layers)
+@
 
 
 The structure learning task by default computes the structure as a DAG. We can however use
@@ -690,29 +522,48 @@ bootstrap samples to learn what we call a \textit{weighted partially DAG}, in or
 absence of an edge in the structure (\citet*{friedman1999data}). This can be done by providing the constructor or the \Rmethod{learn.network}
 method a \Robject{BNDataset} with bootstrap samples, and the additional parameter \Rfunarg{bootstrap = TRUE}.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{bootstrap}\hlstd{(dataset,} \hlnum{100}\hlstd{,} \hlkwc{imputation} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\hlstd{> }\hlstd{net.1}   \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset,}
-\hlstd{+ }                         \hlkwc{algo} \hlstd{=} \hlstr{"mmhc"}\hlstd{,}
-\hlstd{+ }                         \hlkwc{scoring.func} \hlstd{=} \hlstr{"AIC"}\hlstd{,}
-\hlstd{+ }                         \hlkwc{bootstrap} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\hlstd{> }\hlcom{# or, for learning from imputed data}
-\hlstd{> }\hlstd{net.2}   \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset,}
-\hlstd{+ }                         \hlkwc{algo} \hlstd{=} \hlstr{"mmhc"}\hlstd{,}
-\hlstd{+ }                         \hlkwc{scoring.func} \hlstd{=} \hlstr{"AIC"}\hlstd{,}
-\hlstd{+ }                         \hlkwc{bootstrap} \hlstd{=} \hlnum{TRUE}\hlstd{,}
-\hlstd{+ }                         \hlkwc{use.imputed.data} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<learn.network.3, eval=FALSE>>=
+dataset <- child()
+dataset <- bootstrap(dataset, 100, imputation = TRUE)
+net.1   <- learn.network(dataset,
+                         algo = "mmhc",
+                         scoring.func = "AIC",
+                         bootstrap = TRUE)
+# or, for learning from imputed data
+net.2   <- learn.network(dataset,
+                         algo = "mmhc",
+                         scoring.func = "AIC",
+                         bootstrap = TRUE,
+                         use.imputed.data = TRUE)
+@
 
 Structure learning can be performed also using the \Rmethod{learn.structure} method, which has a similar syntax, only requiring as
 first parameter an already initialized network for the dataset. More details can be found in the inline helper.
 
 It is also possible to learn a WPDAG starting from a network with a DAG, using the \Rmethod{wpdag.from.dag} method.
+
+\subsubsection{Empirical evaluation of structure learning algorithms}
+\begin{figure}[!tpb]%figure1
+\centerline{\includegraphics[width=0.75\textwidth]{child_crosses_1000.eps}}
+\caption{SHD vs. running time of i) available case analysis with MMHC, ii) kNN imputation followed by MMHC and iii) SEM, with both the BDeu and the BIC scoring functions, on 20 datasets with 1000 observations and $20\%$ missingness sampled from the 20-nodes Child network}\label{fig:childcrosses}
+%\end{figure}
+
+%\begin{figure}[!tpb]%figure2
+\centerline{\includegraphics[width=0.75\textwidth]{alarm_crosses_1000.eps}}
+\caption{SHD vs. running time of i) available case analysis with MMHC, ii) kNN imputation followed by MMHC and iii) SEM, with both the BDeu and the BIC scoring functions, on 20 datasets with 1000 observations and $20\%$ missingness sampled from the 37-nodes Alarm network}\label{fig:alarmcrosses}
+\end{figure}
+
+\begin{figure}[!tpb]%figure3
+\centerline{\includegraphics[width=0.75\textwidth]{hepar2_crosses_1000.eps}}
+\caption{SHD vs. running time of i) available case analysis with MMHC, ii) kNN imputation followed by MMHC and iii) SEM, with both the BDeu and the BIC scoring functions, on 20 datasets with 1000 observations and $20\%$ missingness sampled from the 70-nodes Hepar2 network}\label{fig:hepar2crosses}
+\end{figure}
+
+In this Section we show the results obtained by MMHC on available cases, MMHC on imputed data and SEM, with the BDeu and BIC scoring functions. Our testbed is composed by three networks available in the literature, Child (20 nodes), Alarm (37 nodes) and Hepar2 (70 nodes). For each network we consider 20 datasets of 1000 observations each, with 20\% missingness. The results for the three networks are reported, respectively, in Figures \ref{fig:childcrosses}, \ref{fig:alarmcrosses} and \ref{fig:hepar2crosses}. The datasets have been generated using our package. All the numerical parameters are set at their default value, and no prior knowledge of the network is assumed (e.g. layering).
+
+Each plot shows the distributions of both the Structural Hamming Distance (SHD, the distance in terms of edges, on the vertical axis) from the original network, and the time needed to obtain to learn the network (in seconds, on the horizontal axis).
+
+For all the three networks the overall best results are obtained using MMHC with BDeu after dataset imputation. MMHC converges in few seconds even for the large Hepar2 network; conversely, SEM takes from few minutes up to few hours, often with worse results. SEM paired with BIC failed to converge in 24 hours for all the 20 datasets.
+
 
 \subsubsection{Parameter learning}
 Parameter learning is the operation that learns the conditional probabilities entailed by a network,
@@ -746,23 +597,15 @@ manipulate a network and access its components.
 First of all, it is surely of interest to obtain the structure of a network. The \Rpackage{bnstruct} package
 provides the \Rmethod{dag()} and \Rmethod{wpdag()} methods in order to access the structure of 
 a network learnt without and with bootstrap (respectively).
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlkwd{dag}\hlstd{(net)}
-\hlstd{> }\hlkwd{wpdag}\hlstd{(net)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<dag1,eval=FALSE>>=
+dag(net)
+wpdag(net)
+@
 
 Then we may want to retrieve the parameters, using the \Rmethod{cpts()} method.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlkwd{cpts}\hlstd{(net)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<cpts2,eval=FALSE>>=
+cpts(net)
+@
 
 Another common operation that we may want to perform is displaying the network, or printing its main informations, using the
 \Rmethod{plot()}, \Rmethod{print()} and \Rmethod{show()} methods. Note that the \Rmethod{plot()} method is flexible enough to allow 
@@ -771,65 +614,57 @@ for the networks learnt with bootstrap. As default, the DAG of a network is sele
 otherwise the WPDAG is used. In case of presence of both the DAG and the WPDAG, in order to specify the latter as
 structure to be plotted, the \Rfunarg{plot.wpdag} logical parameter is provided. As usual, more details are available
 in the inline documentation of the method.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlkwd{plot}\hlstd{(net)} \hlcom{# regular DAG}
-\hlstd{> }\hlkwd{plot}\hlstd{(net,} \hlkwc{plot.wpdag}\hlstd{=T)} \hlcom{# wpdag}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<plotprint,eval=FALSE>>=
+plot(net) # regular DAG
+plot(net, plot.wpdag=T) # wpdag
+@
 
 As it is for \Robject{BNDataset}s, we have several equivalent options to print a network.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlcom{# TFAE}
-\hlstd{> }\hlkwd{print}\hlstd{(net)}
-\hlstd{> }\hlkwd{show}\hlstd{(net)}
-\hlstd{> }\hlstd{net}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<show,eval=FALSE>>=
+# TFAE
+print(net)
+show(net)
+net
+@
+
+For large biological networks it might be convenient to use some external specific tool for visualization.
+We provide the \Rfunarg{write.xgmml} method to export a network in the \texttt{XGMML} format, that can be
+then used for example with Cytoscape.
+<<writecyto,eval=FALSE>>=
+write.xgmml(net)
+@
+
 
 \subsection{Inference}\label{sec:infengine}
 Inference is performed in \Rpackage{bnstruct} using an \Robject{InferenceEngine} object. An \Robject{InferenceEngine}
 is created directly from a network.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }\hlstd{net}     \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset)}
-\hlstd{> }\hlstd{engine}  \hlkwb{<-} \hlkwd{InferenceEngine}\hlstd{(net)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<infeng1,eval=FALSE>>=
+dataset <- child()
+net     <- learn.network(dataset)
+engine  <- InferenceEngine(net)
+@
 
 Optionally, a list of observations can be provided to the \Robject{InferenceEngine}, at its creation or later on.
 The list of observations is a list of two vector, one for the observed variables
 (variable indices or names can be provided, not necessarily in order - better is to list them in order of observation),
 and one for the observed values for the corresponding variables. In case of multiple observations of the same variable, the last one (the most recent one) is considered.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }\hlstd{net}     \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset)}
-\hlstd{> }
-\hlstd{> }\hlcom{# suppose we have observed variable 1 taking value 2}
-\hlstd{> }\hlcom{# and variable 4 taking value 1:}
-\hlstd{> }\hlstd{obs} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlstr{"observed.vars"} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{),}
-\hlstd{+ }            \hlstr{"observed.vals"} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{))}
-\hlstd{> }
-\hlstd{> }\hlcom{# the following are equivalent:}
-\hlstd{> }\hlstd{engine}  \hlkwb{<-} \hlkwd{InferenceEngine}\hlstd{(net, obs)}
-\hlstd{> }
-\hlstd{> }\hlcom{# and}
-\hlstd{> }\hlstd{engine}  \hlkwb{<-} \hlkwd{InferenceEngine}\hlstd{(net)}
-\hlstd{> }\hlkwd{observations}\hlstd{(engine)} \hlkwb{<-} \hlstd{obs}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<infeng2,eval=FALSE>>=
+dataset <- child()
+net     <- learn.network(dataset)
+
+# suppose we have observed variable 1 taking value 2
+# and variable 4 taking value 1:
+obs <- list("observed.vars" = c(1,4),
+            "observed.vals" = c(2,1))
+
+# the following are equivalent:
+engine  <- InferenceEngine(net, obs)
+
+# and
+engine  <- InferenceEngine(net)
+observations(engine) <- obs
+@
 
 The \Robject{InferenceEngine} class provides methods for belief propagation, that is, updating
 the conditional probabilities according to observed values, and for the Expectation-Maximization (EM) algorithm
@@ -840,127 +675,154 @@ Belief propagation can be done using the \Rmethod{belief.propagation} method. It
 and an optional list of observations. If no observations are provided, the engine will use the ones it already contains.
 The \Rmethod{belief.propagation} method returns an \Robject{InferenceEngine} with an \Rmethod{updated.bn}
 updated network.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{obs} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlstr{"observed.vars"} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{),}
-\hlstd{+ }            \hlstr{"observed.vals"} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{))}
-\hlstd{> }\hlstd{engine}  \hlkwb{<-} \hlkwd{InferenceEngine}\hlstd{(net)}
-\hlstd{> }\hlstd{engine}  \hlkwb{<-} \hlkwd{belief.propagation}\hlstd{(engine, obs)}
-\hlstd{> }\hlstd{new.net} \hlkwb{<-} \hlkwd{updated.bn}\hlstd{(engine)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<infeng3,eval=FALSE>>=
+obs <- list("observed.vars" = c(1,4),
+            "observed.vals" = c(2,1))
+engine  <- InferenceEngine(net)
+engine  <- belief.propagation(engine, obs)
+new.net <- updated.bn(engine)
+@
 
 The EM algorithm is instead performed by the \Rmethod{em} method. Its arguments are an \Robject{InferenceEngine}
 and a \Robject{BNDataset} (optionally: a convergence \Rfunarg{threshold}, the Equivalent Sample Size \Rfunarg{ess} and the maximum number of iterations \Rfunarg{max.em.iterations}),
 and it returns a list consisting in an updated \Robject{InferenceEngine} and an updated \Robject{BNDataset}.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }\hlstd{net}     \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset)}
-\hlstd{> }\hlstd{engine}  \hlkwb{<-} \hlkwd{InferenceEngine}\hlstd{(net)}
-\hlstd{> }\hlstd{results} \hlkwb{<-} \hlkwd{em}\hlstd{(engine, dataset)}
-\hlstd{> }\hlstd{updated.engine}  \hlkwb{<-} \hlstd{results}\hlopt{$}\hlstd{InferenceEngine}
-\hlstd{> }\hlstd{updated.dataset} \hlkwb{<-} \hlstd{results}\hlopt{$}\hlstd{BNDataset}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+<<infeng4,eval=FALSE>>=
+dataset <- child()
+net     <- learn.network(dataset)
+engine  <- InferenceEngine(net)
+results <- em(engine, dataset)
+updated.engine  <- results$InferenceEngine
+updated.dataset <- results$BNDataset
+@
 
 
-\section{Two small but complete examples}
+\section{Three small but complete examples}
 Here we show two small but complete examples, in order to highlight how the package can provide significant results
 with few instructions.
 
+
+\subsection{Basic Learning}
 First we show how some different learning setups perform on the \texttt{Child} dataset. We compare the default
 \texttt{mmhc-BDeu} pair on available case analysis (raw data with missing values) and on imputed data, and
 the \texttt{sem-BDeu} pair.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{child}\hlstd{()}
-\hlstd{> }
-\hlstd{> }\hlcom{# learning with available cases analysis, MMHC, BDeu}
-\hlstd{> }\hlstd{net} \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset)}
-\end{alltt}
+<<childtest,eval=FALSE,cache=FALSE>>=
+dataset <- child()
+
+# learning with available cases analysis, MMHC, BDeu
+net <- learn.network(dataset)
+plot(net)
+
+# learning with imputed data, MMHC, BDeu
+imp.dataset <- impute(dataset)
+net <- learn.network(imp.dataset, use.imputed.data = TRUE)
+plot(net)
+@
+\begin{figure}[!h]%figure3
+\centerline{\includegraphics[width=0.9\textwidth]{childtest-1.pdf}}
+\end{figure}
+
+<<childtest1cont1,eval=FALSE>>=
+# SEM, BDeu using previous network as starting point
+net <- learn.network(dataset, algo = "sem",
+                     scoring.func = "BDeu",
+                     initial.network = net,
+                     struct.threshold = 10,
+                     param.threshold = 0.001)
+plot(net)
+@
+\begin{figure}[!h]%figure3
+\centerline{\includegraphics[width=0.9\textwidth]{childtest-2.pdf}}
+\end{figure}
 
 
-{\ttfamily\noindent\itshape\color{messagecolor}{bnstruct :: learning the structure using MMHC ...\\bnstruct :: learning using MMHC completed.\\bnstruct :: learning network parameters ... \\bnstruct :: parameter learning done.}}\begin{alltt}
-\hlstd{> }\hlkwd{plot}\hlstd{(net)}
-\end{alltt}
-\end{kframe}
-\includegraphics[width=\maxwidth]{figure/childtest-1} 
-\begin{kframe}\begin{alltt}
-\hlstd{> }\hlcom{# learning with imputed data, MMHC, BDeu}
-\hlstd{> }\hlstd{imp.dataset} \hlkwb{<-} \hlkwd{impute}\hlstd{(dataset)}
-\end{alltt}
+<<childtest1cont2,eval=FALSE>>=
+# we update the probabilities with EM from the raw dataset,
+# starting from the first network
+engine  <- InferenceEngine(net)
+results <- em(engine, dataset)
+updated.engine  <- results$InferenceEngine
+updated.dataset <- results$BNDataset
+@
 
 
-{\ttfamily\noindent\itshape\color{messagecolor}{bnstruct :: performing imputation ...\\bnstruct :: imputation finished.}}\begin{alltt}
-\hlstd{> }\hlstd{net} \hlkwb{<-} \hlkwd{learn.network}\hlstd{(imp.dataset,} \hlkwc{use.imputed.data} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\end{alltt}
-
-
-{\ttfamily\noindent\itshape\color{messagecolor}{bnstruct :: learning the structure using MMHC ...\\bnstruct :: learning using MMHC completed.\\bnstruct :: learning network parameters ... \\bnstruct :: parameter learning done.}}\begin{alltt}
-\hlstd{> }\hlkwd{plot}\hlstd{(net)}
-\end{alltt}
-\end{kframe}
-\includegraphics[width=\maxwidth]{figure/childtest-2} 
-\begin{kframe}\begin{alltt}
-\hlstd{> }\hlcom{# SEM, BDeu using previous network as starting point}
-\hlstd{> }\hlstd{net} \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset,} \hlkwc{algo} \hlstd{=} \hlstr{"sem"}\hlstd{,}
-\hlstd{+ }                     \hlkwc{scoring.func} \hlstd{=} \hlstr{"BDeu"}\hlstd{,}
-\hlstd{+ }                     \hlkwc{initial.network} \hlstd{= net,}
-\hlstd{+ }                     \hlkwc{struct.threshold} \hlstd{=} \hlnum{10}\hlstd{,}
-\hlstd{+ }                     \hlkwc{param.threshold} \hlstd{=} \hlnum{0.001}\hlstd{)}
-\end{alltt}
-
-
-{\ttfamily\noindent\itshape\color{messagecolor}{bnstruct :: learning the structure using SEM ...\\... bnstruct :: starting EM algorithm ...\\... ... bnstruct :: learning network parameters ... \\... ... bnstruct :: parameter learning done.\\... ... bnstruct :: learning network parameters ... \\... ... bnstruct :: parameter learning done.\\... bnstruct :: EM algorithm completed.\\... bnstruct :: learning the structure using MMHC ...\\... bnstruct :: learning using MMHC completed.\\... bnstruct :: learning network parameters ... \\... bnstruct :: parameter learning done.\\... bnstruct :: starting EM algorithm ...\\... ... bnstruct :: learning network parameters ... \\... ... bnstruct :: parameter learning done.\\... ... bnstruct :: learning network parameters ... \\... ... bnstruct :: parameter learning done.\\... ... bnstruct :: learning network parameters ... \\... ... bnstruct :: parameter learning done.\\... ... bnstruct :: learning network parameters ... \\... ... bnstruct :: parameter learning done.\\... bnstruct :: EM algorithm completed.\\... bnstruct :: learning the structure using MMHC ...\\... bnstruct :: learning using MMHC completed.\\... bnstruct :: learning network parameters ... \\... bnstruct :: parameter learning done.\\bnstruct :: learning using SEM completed.\\bnstruct :: learning network parameters ... \\bnstruct :: parameter learning done.}}\begin{alltt}
-\hlstd{> }\hlkwd{plot}\hlstd{(net)}
-\end{alltt}
-\end{kframe}
-\includegraphics[width=\maxwidth]{figure/childtest-3} 
-\begin{kframe}\begin{alltt}
-\hlstd{> }\hlcom{# we update the probabilities with EM from the raw dataset,}
-\hlstd{> }\hlcom{# starting from the first network}
-\hlstd{> }\hlstd{engine}  \hlkwb{<-} \hlkwd{InferenceEngine}\hlstd{(net)}
-\hlstd{> }\hlstd{results} \hlkwb{<-} \hlkwd{em}\hlstd{(engine, dataset)}
-\end{alltt}
-
-
-{\ttfamily\noindent\itshape\color{messagecolor}{bnstruct :: starting EM algorithm ...\\... bnstruct :: learning network parameters ... \\... bnstruct :: parameter learning done.\\... bnstruct :: learning network parameters ... \\... bnstruct :: parameter learning done.\\... bnstruct :: learning network parameters ... \\... bnstruct :: parameter learning done.\\... bnstruct :: learning network parameters ... \\... bnstruct :: parameter learning done.\\bnstruct :: EM algorithm completed.}}\begin{alltt}
-\hlstd{> }\hlstd{updated.engine}  \hlkwb{<-} \hlstd{results}\hlopt{$}\hlstd{InferenceEngine}
-\hlstd{> }\hlstd{updated.dataset} \hlkwb{<-} \hlstd{results}\hlopt{$}\hlstd{BNDataset}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
+\subsection{Learning with bootstrap}
 The second example is about learning with bootstrap. This time we use the \texttt{Asia} dataset.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{asia}\hlstd{()}
-\hlstd{> }\hlstd{dataset} \hlkwb{<-} \hlkwd{bootstrap}\hlstd{(dataset)}
-\end{alltt}
+<<asiatest,eval=FALSE,cache=FALSE>>=
+dataset <- asia()
+dataset <- bootstrap(dataset)
+net <- learn.network(dataset, bootstrap = TRUE)
+
+plot(net)
+@
+\begin{figure}[!h]%figure3
+\centerline{\includegraphics[width=0.9\textwidth]{asiatest-1.pdf}}
+\end{figure}
+
+\subsection{Naive Bayes}\label{sec:naivebayes}
+
+Finally, we show an example of the learning task of a Naive Bayes network. Suppose we have a mail dataset, equally divided in spam and legitimate mails.
+We consider four words: \texttt{buy} and \texttt{med} mainly associated to spam mails, and \texttt{bnstruct} and \texttt{learning}, observed in legitimate mails.
+We can divide the variables in two layers: one containing only the target variable, and the second one with the words.
+We then specify the presence or absence of edges in each layer, and among the layers. Edges from lower layers to upper layers are forbidden.
+For this we need to define a binary squared matrix with as many rows and columns as the number of layers, so in our example we need a 2x2 matrix.
+Each entry $m_{i,j}$ of the matrix contains 0 if no edges can go from variables in layer $i$ to variables in layer $j$, and 1 if the presence of such edges is allowed;
+the matrix should be upper triangular, and it will be transformed as such if it is not.
+
+As our Naive Bayes network has edges only from the target variable to the word variables, and not between variables in layer 2, we want edges only
+in $m_{1,2}$, so we set that cell to 1 and all the others to 0.
 
 
-{\ttfamily\noindent\itshape\color{messagecolor}{bnstruct :: Generating bootstrap samples ...\\bnstruct :: Bootstrap samples generated.}}\begin{alltt}
-\hlstd{> }\hlstd{net} \hlkwb{<-} \hlkwd{learn.network}\hlstd{(dataset,} \hlkwc{bootstrap} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\end{alltt}
+<<naivebayes,eval=FALSE>>=
+# artificial dataset generation
+spam <- sample(c(0,1), 1000, prob=c(0.5, 0.5), replace=T)
+buy <- sapply(spam, function(x) {
+                        if (x == 0) {
+                            sample(c(0,1),1,prob=c(0.8,0.2),replace=T)
+                        } else {
+                            sample(c(0,1),1,prob=c(0.2,0.8))}
+                    })
+med <- sapply(spam, function(x) {
+                        if (x == 0) {
+                            sample(c(0,1),1,prob=c(0.95,0.05),replace=T)
+                        } else {
+                            sample(c(0,1),1,prob=c(0.05,0.95))}
+                    })
+bns <- sapply(spam, function(x) {
+                        if (x == 0) {
+                            sample(c(0,1),1,prob=c(0.01,0.99),replace=T)
+                        } else {
+                            sample(c(0,1),1,prob=c(0.01,0.99))}
+                        })
+lea <- sapply(spam, function(x) {
+                        if (x == 0) {
+                            sample(c(0,1),1,prob=c(0.05,0.95),replace=T)
+                        } else {
+                            sample(c(0,1),1,prob=c(0.95,0.05))}
+                        })
+d <- as.matrix(cbind(spam,buy,med,bns,lea))
+colnames(d) <- c("spam","buy","med","bnstruct","learn")
+library(bnstruct)
+spamdataset <- BNDataset(d, c(T,T,T,T,T), 
+                         c("spam","buy","med","bnstruct","learn"),
+                         c(2,2,2,2,2), starts.from=0)
+n <- learn.network(spamdataset,
+                   algo="mmhc",
+                   layering=c(1,2,2,2,2),
+                   layer.struct=matrix(c(0,0,1,0),
+                                       c(2,2)))
+plot(n)
+@
 
-
-{\ttfamily\noindent\itshape\color{messagecolor}{bnstruct :: learning the structure using MMHC ...\\bnstruct :: learning using MMHC completed.}}\begin{alltt}
-\hlstd{> }\hlkwd{plot}\hlstd{(net)}
-\end{alltt}
-\end{kframe}
-\includegraphics[width=\maxwidth]{figure/asiatest-1} 
-
-\end{knitrout}
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.6\textwidth]{nb.pdf}
+    \caption{Naive Bayes for our spam example.}
+    \label{fig:nb}
+  \end{center}
+\end{figure}
 
 % -----------------------------------------------------
 % 
@@ -1081,3 +943,5 @@ The second example is about learning with bootstrap. This time we use the \textt
 \bibliography{bibtex}
 
 \end{document}
+
+% end
