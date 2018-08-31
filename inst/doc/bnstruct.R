@@ -10,6 +10,9 @@ comment=""
 ## ----echo=FALSE,include=FALSE--------------------------------------------
 library(bnstruct)
 
+## ----citation2,eval=FALSE------------------------------------------------
+#  citation("bnstruct")
+
 ## ----installcran,eval=FALSE----------------------------------------------
 #  install.packages("bnstruct")
 
@@ -35,8 +38,8 @@ library(bnstruct)
 #  child <- child()
 
 ## ----evolvingdataset,eval=FALSE------------------------------------------
-#  dataset <- BNDataset("evolving_system.data",
-#                       "evolving_system.header",
+#  dataset <- BNDataset("asia_2_layers.data",
+#                       "asia_2_layers.header",
 #                       num.time.steps=2)
 
 ## ----imputation1,eval=FALSE----------------------------------------------
@@ -115,30 +118,42 @@ library(bnstruct)
 #                           use.imputed.data = TRUE)
 
 ## ----dbn1,eval=F---------------------------------------------------------
-#  # Assume a system with 8 nodes is observed over 4 consecutive
+#  # asia_2_layers is a toy example constructed purely for testing
+#  # purposes. It does not represent a real set of observations.
+#  #
+#  # It simulates a system with 8 nodes observed over 2 consecutive
 #  # time steps, of which we know the layering in each time slot.
-#  # The dataset contains therefore 32 variables observed.
-#  dataset <- BNDataset("evolving_system.data",
-#                       "evolving_system.header",
-#                       num.time.steps = 4)
-#  dbn <- learn.dynamic.network(dataset, num.time.steps = 4)
+#  # The dataset contains therefore 16 variables observed.
+#  dataset <- BNDataset("asia_2_layers.data",
+#                       "asia_2_layers.header",
+#                       num.time.steps = 2)
+#  dbn <- learn.dynamic.network(dataset, num.time.steps = 2)
 
 ## ----dbn2,eval=F---------------------------------------------------------
-#  # Assume a system with 8 nodes is observed over 4 consecutive
+#  # asia_2_layers is a toy example constructed purely for testing
+#  # purposes. It does not represent a real set of observations.
+#  #
+#  # It simulates a system with 8 nodes observed over 2 consecutive
 #  # time steps, of which we know the layering in each time slot.
-#  # The dataset contains therefore 32 variables observed.
-#  dataset <- BNDataset("evolving_system.data",
-#                       "evolving_system.header",
-#                       num.time.steps = 4)
+#  # The dataset contains therefore 16 variables observed.
+#  dataset <- BNDataset("asia_2_layers.data",
+#                       "asia_2_layers.header",
+#                       num.time.steps = 2)
 #  dbn <- learn.network(dataset)
 
 ## ----dbn3,eval=F---------------------------------------------------------
-#  dataset <- BNDataset("evolving_system.data",
-#                       "evolving_system.header",
-#                       num.time.steps = 4)
+#  # asia_2_layers is a toy example constructed purely for testing
+#  # purposes. It does not represent a real set of observations.
+#  #
+#  # It simulates a system with 8 nodes observed over 2 consecutive
+#  # time steps, of which we know the layering in each time slot.
+#  # The dataset contains therefore 16 variables observed.
+#  dataset <- BNDataset("asia_2_layers.data",
+#                       "asia_2_layers.header",
+#                       num.time.steps = 2)
 #  layers <- c(1,2,2,3,3,3,3,3)
 #  dbn <- learn.dynamic.network(dataset,
-#                               num.time.steps = 4,
+#                               num.time.steps = 2,
 #                               layering = layers)
 
 ## ----dag1,eval=FALSE-----------------------------------------------------
@@ -151,6 +166,12 @@ library(bnstruct)
 ## ----plotprint,eval=FALSE------------------------------------------------
 #  plot(net) # regular DAG
 #  plot(net, plot.wpdag=T) # wpdag
+
+## ----plotqgraph,eval=FALSE-----------------------------------------------
+#  plot(net, method="qgraph",
+#            label.scale.equal=T,
+#            node.width = 1.6,
+#            plot.wpdag=T)
 
 ## ----show,eval=FALSE-----------------------------------------------------
 #  # TFAE

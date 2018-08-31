@@ -13,15 +13,17 @@ learn.network(x, ...)
 
 \S4method{learn.network}{BN}(x, y = NULL, algo = "mmhc",
   scoring.func = "BDeu", initial.network = NULL, alpha = 0.05, ess = 1,
-  bootstrap = FALSE, layering = c(), max.fanin.layers = NULL,
-  max.fanin = num.variables(dataset), layer.struct = NULL,
-  cont.nodes = c(), use.imputed.data = FALSE, use.cpc = TRUE, ...)
+  bootstrap = FALSE, layering = c(), max.fanin = num.variables(y) - 1,
+  max.fanin.layers = NULL, max.parents = num.variables(y) - 1,
+  max.parents.layers = NULL, layer.struct = NULL, cont.nodes = c(),
+  use.imputed.data = FALSE, use.cpc = TRUE, mandatory.edges = NULL, ...)
 
 \S4method{learn.network}{BNDataset}(x, algo = "mmhc", scoring.func = "BDeu",
   initial.network = NULL, alpha = 0.05, ess = 1, bootstrap = FALSE,
-  layering = c(), max.fanin.layers = NULL,
-  max.fanin = num.variables(dataset), layer.struct = NULL,
-  cont.nodes = c(), use.imputed.data = FALSE, use.cpc = TRUE, ...)
+  layering = c(), max.fanin = num.variables(x) - 1,
+  max.fanin.layers = NULL, max.parents = num.variables(x) - 1,
+  max.parents.layers = NULL, layer.struct = NULL, cont.nodes = c(),
+  use.imputed.data = FALSE, use.cpc = TRUE, mandatory.edges = NULL, ...)
 }
 \arguments{
 \item{x}{can be a \code{\link{BN}} or a \code{\link{BNDataset}}. If \code{x} is a \code{\link{BN}},
@@ -51,12 +53,17 @@ or the string \code{random.chain} to sample a random chain as starting point.}
 
 \item{layering}{vector containing the layers each node belongs to.}
 
-\item{max.fanin.layers}{matrix of available parents in each layer (only for \code{sm}).}
+\item{max.fanin}{maximum number of parents for each node (only for \code{hc}, \code{mmhc}).}
 
-\item{max.fanin}{maximum number of parents for each node (only for \code{sm}).}
+\item{max.fanin.layers}{matrix of available parents in each layer (only for \code{sm} --
+DEPRECATED, use \code{max.parents.layers} instead).}
+
+\item{max.parents}{maximum number of parents for each node (for \code{sm}, \code{hc}, \code{mmhc}).}
+
+\item{max.parents.layers}{matrix of available parents in each layer (only for \code{sm}).}
 
 \item{layer.struct}{\code{0/1} matrix for indicating which layers can contain parent nodes
-for nodes in a layer (only for \code{mmhc}).}
+for nodes in a layer (only for \code{mmhc}, \code{mmpc}).}
 
 \item{cont.nodes}{vector containing the index of continuous variables.}
 
@@ -65,6 +72,10 @@ for nodes in a layer (only for \code{mmhc}).}
 
 \item{use.cpc}{(when using \code{mmhc}) compute Candidate Parent-and-Children sets instead of 
 starting the Hill Climbing from an empty graph.}
+
+\item{mandatory.edges}{binary matrix, where a \code{1} in cell \code{[i,j]}
+indicates that an edge from node \code{i} to node \code{j} must be present
+in the final network.}
 }
 \value{
 new \code{\link{BN}} object with structure (DAG) and conditional probabilities
