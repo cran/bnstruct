@@ -125,6 +125,9 @@ setValidity("BN",
               if (num.time.steps(object) < 1) {
                 retval <- c(retval, "impossible number of time steps in the network")
               }
+              if (length(object@quantiles) > 1 && length(object@quantiles) != length(object@variables)) {
+                retval <- c(retval, "incorrect list of quantiles")
+              }
               
               if (is.null(retval)) return (TRUE)
               return(retval)
@@ -152,6 +155,15 @@ setMethod("discreteness",
           function(x)
           {
             return(slot(x, "discreteness"))
+          })
+
+#' @aliases quantiles,BN
+#' @rdname quantiles
+setMethod("quantiles",
+          "BN",
+          function(x)
+          {
+            return(slot(x, "quantiles"))
           })
 
 #' @aliases node.sizes,BN
@@ -254,6 +266,18 @@ setReplaceMethod("discreteness",
                    return(x)
                  })
 
+#' @name quantiles<-
+#' @aliases quantiles<-,BN-method
+#' @docType methods
+#' @rdname quantiles-set
+setReplaceMethod("quantiles",
+                 "BN",
+                 function(x, value)
+                 {
+                   slot(x, "quantiles") <- value
+                   validObject(x)
+                   return(x)
+                 })
 
 #' @name node.sizes<-
 #' @aliases node.sizes<-,BN-method
@@ -365,7 +389,7 @@ setMethod("layering",
 #' @rdname get.most.probable.values
 setMethod("get.most.probable.values",
           "BN",
-          function(x)
+          function(x, prev.values = NULL)
           {
             bn   <- x
             dag  <- dag(bn)
@@ -393,31 +417,36 @@ setMethod("get.most.probable.values",
             
             for (node in sorted.nodes)
             {
-              pot  <- cpts[[node]]
-              vars <- c(unlist(dim.vars[[node]]))
+              if (length(prev.values) == 0 || is.na(prev.values[node]))
+              {
+                pot  <- cpts[[node]]
+                vars <- c(unlist(dim.vars[[node]]))
 
-              # sum out parent variables
-              if (length(dim.vars[[node]]) > 1)
-              {
-                # find the dimensions corresponding to the current variable
-                for (parent in setdiff(vars, node))
+                # sum out parent variables
+                if (length(dim.vars[[node]]) > 1)
                 {
-                  out  <- marginalize(pot, vars, parent)
-                  pot  <- out$potential
-                  vars <- out$vars
-                  pot <- pot / sum(pot)
+                  # find the dimensions corresponding to the current variable
+                  for (parent in setdiff(vars, node))
+                  {
+                    out  <- marginalize(pot, vars, parent)
+                    pot  <- out$potential
+                    vars <- out$vars
+                    pot <- pot / sum(pot)
+                  }
                 }
-              }
-              
-              # print(pot)
-              wm <- which(!is.na(match(c(pot),max(pot))))
-              if (length(wm) == 1)
-              {
-                mpv[node] <- wm # pot[wm]
-              }
-              else
-              {
-                mpv[node] <- sample(1:node.sizes[node], 1, replace=TRUE, prob=pot)
+                
+                # print(pot)
+                wm <- which(!is.na(match(c(pot),max(pot))))
+                if (length(wm) == 1)
+                {
+                  mpv[node] <- wm # pot[wm]
+                }
+                else
+                {
+                  mpv[node] <- sample(1:node.sizes[node], 1, replace=TRUE, prob=pot)
+                }
+              } else {
+                  mpv[node] <- prev.values[node]
               }
               
               # propagate information from parent nodes to children
@@ -457,6 +486,7 @@ setMethod("get.most.probable.values",
 # redefition of print() for BN objects
 #' print a \code{\link{BN}}, \code{\link{BNDataset}} or \code{\link{InferenceEngine}} to \code{stdout}.
 #' 
+#' @method print BN
 #' @name print
 #' 
 #' @param x a \code{\link{BN}}, \code{\link{BNDataset}} or \code{\link{InferenceEngine}}.
@@ -701,9 +731,11 @@ setMethod("sample.row", "BN",
             bn   <- x
             dag  <- dag(bn)
             cpts <- cpts(bn)
-            num.nodes  <- num.nodes(bn)
-            variables  <- variables(bn)
-            node.sizes <- node.sizes(bn)
+            num.nodes    <- num.nodes(bn)
+            variables    <- variables(bn)
+            node.sizes   <- node.sizes(bn)
+            discreteness <- discreteness(bn)
+            quantiles    <- quantiles(bn)
             
             mpv  <- array(rep(0,num.nodes), dim=c(num.nodes), dimnames=list(variables))
             
@@ -738,6 +770,17 @@ setMethod("sample.row", "BN",
                 mpv[node] <- sample(1:node.sizes[node], 1, replace=T, prob=cpt)
               }
             }
+
+            # sample continuous values, if possible
+            if (length(quantiles) > 0) {
+              for (node in sorted.nodes) {
+                if (discreteness[node] == FALSE && length(quantiles[[node]]) > 1) {
+                  lb <- quantiles[[node]][mpv[node]]
+                  ub <- quantiles[[node]][mpv[node]+1]
+                  mpv[node] <- runif(1, lb, ub)
+                }
+              }
+            }
             
             if (mar > 0) {            
               missing.prob <- runif(num.nodes, 0, 1)
@@ -764,7 +807,7 @@ setMethod("sample.dataset",c("BN"),
             for (i in 1:n)
               obs[i,] <- sample.row(x, mar)
             
-            storage.mode(obs) <- "integer"
+            #storage.mode(obs) <- "integer"
             
             bnd <- BNDataset(obs, discreteness(x), variables(x), node.sizes(x))
            

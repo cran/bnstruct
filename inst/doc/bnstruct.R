@@ -28,10 +28,10 @@ library(bnstruct)
 ## ----create.sample.datasets, eval=FALSE----------------------------------
 #  asia <- BNDataset("asia_10000.data",
 #                    "asia_10000.header",
-#                    starts.from=0)
+#                    starts.from = 0)
 #  child <- BNDataset("Child_data_na_5000.data",
 #                     "Child_data_na_5000.header",
-#                     starts.from=0)
+#                     starts.from = 0)
 
 ## ----sample.datasets.accessors,eval=FALSE--------------------------------
 #  asia  <- asia()
@@ -40,7 +40,8 @@ library(bnstruct)
 ## ----evolvingdataset,eval=FALSE------------------------------------------
 #  dataset <- BNDataset("asia_2_layers.data",
 #                       "asia_2_layers.header",
-#                       num.time.steps=2)
+#                       num.time.steps = 2,
+#                       starts.from = 0)
 
 ## ----imputation1,eval=FALSE----------------------------------------------
 #  dataset <- BNDataset(data.file   = "path/to/file.data",
@@ -126,7 +127,8 @@ library(bnstruct)
 #  # The dataset contains therefore 16 variables observed.
 #  dataset <- BNDataset("asia_2_layers.data",
 #                       "asia_2_layers.header",
-#                       num.time.steps = 2)
+#                       num.time.steps = 2,
+#                       starts_from = 0)
 #  dbn <- learn.dynamic.network(dataset, num.time.steps = 2)
 
 ## ----dbn2,eval=F---------------------------------------------------------
@@ -138,7 +140,8 @@ library(bnstruct)
 #  # The dataset contains therefore 16 variables observed.
 #  dataset <- BNDataset("asia_2_layers.data",
 #                       "asia_2_layers.header",
-#                       num.time.steps = 2)
+#                       num.time.steps = 2,
+#                       starts.from = 0)
 #  dbn <- learn.network(dataset)
 
 ## ----dbn3,eval=F---------------------------------------------------------
@@ -150,7 +153,8 @@ library(bnstruct)
 #  # The dataset contains therefore 16 variables observed.
 #  dataset <- BNDataset("asia_2_layers.data",
 #                       "asia_2_layers.header",
-#                       num.time.steps = 2)
+#                       num.time.steps = 2,
+#                       starts.from = 0)
 #  layers <- c(1,2,2,3,3,3,3,3)
 #  dbn <- learn.dynamic.network(dataset,
 #                               num.time.steps = 2,
