@@ -1,7 +1,7 @@
-df9733e2bdd8b54b2786e10425b93653 *DESCRIPTION
+41d913f2a9093979c0e03c60f6e75688 *DESCRIPTION
 590f4259ae6e416a3ff9d0c493bab2f0 *LICENSE
 f577d6231ab0a9f0a8209cb9fade6443 *NAMESPACE
-dd04011562abe09558a697d7f008e8e0 *NEWS
+cbefd27797cfc1ce67523cba3f1344ce *NEWS
 b9bc419c30696b38fa7f27d1d8e71a31 *R/AllClasses.R
 ad204e35f4d6331ce8a37273f381592a *R/AllGenerics.R
 fbf1eaf31ffc5e157b0d8b98ccc66c12 *R/BN-methods.R
@@ -21,8 +21,8 @@ c518e6ad4a657b2648659d20c07c1e5f *R/io-methods.R
 e6fb593045963c378c27841db09e377f *R/learn-methods.R
 898f395d03bcba7e90dd818928521359 *R/mmhc.R
 69b099f54ab8e1204e4ad709f093f1ed *R/sem.R
-f52013b82ba370ae1e3dca84dbcb395b *R/sm.R
-72fe2a60188e06e8a32bb381a87c8c94 *R/util.R
+15b5204162187c3af334de23ed1c4941 *R/sm.R
+941a8c39c7f09bfc5cd9b847821aaf71 *R/util.R
 0b272217a6bce277940740a4665afda1 *README.md
 50752fd8b113c3161208fd7e44cf5dba *build/vignette.rds
 8683acafa831f69136890d85f10f78bf *data/asia_10000.rda
@@ -32,7 +32,7 @@ b083e70d356672774621b693a7930cf6 *inst/CITATION
 ed4761f70e0f396b0fa45aa801010607 *inst/doc/bnstruct-manual.pdf
 9b169fc54eb78a6090349b69cc344ec8 *inst/doc/bnstruct.R
 e8f8ffcac802cc2dc40ee1f84247e171 *inst/doc/bnstruct.Rnw
-9187c3cb14f2c02bb56db59adc248263 *inst/doc/bnstruct.pdf
+2f6c85ac8b28612308bab27997e07d9d *inst/doc/bnstruct.pdf
 56ba1d3caa45179fd491d8cba6b832c2 *inst/examples/dbn.R
 413bb6fb7c02cdf99a77c99095ec0704 *inst/examples/naivebayes.R
 63865856d386119ae649848a91afb472 *inst/examples/test_bp_asia.R
