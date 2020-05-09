@@ -1,4 +1,4 @@
-## ----include=FALSE-------------------------------------------------------
+## ----include=FALSE------------------------------------------------------------
 library(knitr)
 opts_chunk$set(
 concordance=TRUE,
@@ -7,16 +7,16 @@ error=TRUE,
 comment=""
 )
 
-## ----echo=FALSE,include=FALSE--------------------------------------------
+## ----echo=FALSE,include=FALSE-------------------------------------------------
 library(bnstruct)
 
-## ----citation2,eval=FALSE------------------------------------------------
+## ----citation2,eval=FALSE-----------------------------------------------------
 #  citation("bnstruct")
 
-## ----installcran,eval=FALSE----------------------------------------------
+## ----installcran,eval=FALSE---------------------------------------------------
 #  install.packages("bnstruct")
 
-## ----bndataset.constructor, eval=FALSE-----------------------------------
+## ----bndataset.constructor, eval=FALSE----------------------------------------
 #  dataset.from.data <- BNDataset(data = data,
 #                                 discreteness = rep('d',4),
 #                                 variables = c("a", "b", "c", "d"),
@@ -25,7 +25,7 @@ library(bnstruct)
 #  dataset.from.file <- BNDataset("path/to/data.file",
 #                                 "path/to/header.file")
 
-## ----create.sample.datasets, eval=FALSE----------------------------------
+## ----create.sample.datasets, eval=FALSE---------------------------------------
 #  asia <- BNDataset("asia_10000.data",
 #                    "asia_10000.header",
 #                    starts.from = 0)
@@ -33,22 +33,22 @@ library(bnstruct)
 #                     "Child_data_na_5000.header",
 #                     starts.from = 0)
 
-## ----sample.datasets.accessors,eval=FALSE--------------------------------
+## ----sample.datasets.accessors,eval=FALSE-------------------------------------
 #  asia  <- asia()
 #  child <- child()
 
-## ----evolvingdataset,eval=FALSE------------------------------------------
+## ----evolvingdataset,eval=FALSE-----------------------------------------------
 #  dataset <- BNDataset("asia_2_layers.data",
 #                       "asia_2_layers.header",
 #                       num.time.steps = 2,
 #                       starts.from = 0)
 
-## ----imputation1,eval=FALSE----------------------------------------------
+## ----imputation1,eval=FALSE---------------------------------------------------
 #  dataset <- BNDataset(data.file   = "path/to/file.data",
 #                       header.file = "path/to/file.header")
 #  dataset <- impute(dataset)
 
-## ----bootstrap1,eval=FALSE-----------------------------------------------
+## ----bootstrap1,eval=FALSE----------------------------------------------------
 #  dataset <- BNDataset("path/to/file.data",
 #                       "path/to/file.header")
 #  dataset <- bootstrap(dataset, num.boots = 100)
@@ -56,31 +56,31 @@ library(bnstruct)
 #                                            num.boots = 100,
 #                                            imputation = TRUE)
 
-## ----dataset.print,eval=FALSE--------------------------------------------
+## ----dataset.print,eval=FALSE-------------------------------------------------
 #  # the following are equivalent:
 #  print(dataset)
 #  show(dataset)
 #  dataset # from inside an R session
 
-## ----getboot,eval=FALSE--------------------------------------------------
+## ----getboot,eval=FALSE-------------------------------------------------------
 #  # get raw samples
 #  for (i in 1:num.boots(dataset))
 #    print( boot(dataset, i) )
 
-## ----getboot.1,eval=FALSE------------------------------------------------
+## ----getboot.1,eval=FALSE-----------------------------------------------------
 #  # get imputed samples
 #  for (i in 1:num.boots(dataset))
 #    print( boot(dataset, i, use.imputed.data = TRUE) )
 
-## ----bn2, eval=FALSE-----------------------------------------------------
+## ----bn2, eval=FALSE----------------------------------------------------------
 #  dataset <- child()
 #  net     <- BN(dataset)
 
-## ----learn.network, eval=FALSE-------------------------------------------
+## ----learn.network, eval=FALSE------------------------------------------------
 #  dataset <- child()
 #  net     <- learn.network(dataset)
 
-## ----learn.network.2, eval=FALSE-----------------------------------------
+## ----learn.network.2, eval=FALSE----------------------------------------------
 #  dataset <- child()
 #  net.1   <- learn.network(dataset,
 #                           algo = "sem",
@@ -91,7 +91,7 @@ library(bnstruct)
 #                           scoring.func = "BDeu",
 #                           use.imputed.data = TRUE)
 
-## ----learn.network.chain, eval=FALSE-------------------------------------
+## ----learn.network.chain, eval=FALSE------------------------------------------
 #  dataset <- child()
 #  net.1   <- learn.network(dataset,
 #                           initial.network = "random.chain",
@@ -100,11 +100,11 @@ library(bnstruct)
 #                           algo = "sem",
 #                           initial.network = net.1)
 
-## ----layering,eval=F-----------------------------------------------------
+## ----layering,eval=F----------------------------------------------------------
 #  layers <- c(1,2,3,3,3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5)
 #  net.layer <- learn.network(dataset, layering = layers)
 
-## ----learn.network.3, eval=FALSE-----------------------------------------
+## ----learn.network.3, eval=FALSE----------------------------------------------
 #  dataset <- child()
 #  dataset <- bootstrap(dataset, 100, imputation = TRUE)
 #  net.1   <- learn.network(dataset,
@@ -118,7 +118,7 @@ library(bnstruct)
 #                           bootstrap = TRUE,
 #                           use.imputed.data = TRUE)
 
-## ----dbn1,eval=F---------------------------------------------------------
+## ----dbn1,eval=F--------------------------------------------------------------
 #  # asia_2_layers is a toy example constructed purely for testing
 #  # purposes. It does not represent a real set of observations.
 #  #
@@ -131,7 +131,7 @@ library(bnstruct)
 #                       starts_from = 0)
 #  dbn <- learn.dynamic.network(dataset, num.time.steps = 2)
 
-## ----dbn2,eval=F---------------------------------------------------------
+## ----dbn2,eval=F--------------------------------------------------------------
 #  # asia_2_layers is a toy example constructed purely for testing
 #  # purposes. It does not represent a real set of observations.
 #  #
@@ -144,7 +144,7 @@ library(bnstruct)
 #                       starts.from = 0)
 #  dbn <- learn.network(dataset)
 
-## ----dbn3,eval=F---------------------------------------------------------
+## ----dbn3,eval=F--------------------------------------------------------------
 #  # asia_2_layers is a toy example constructed purely for testing
 #  # purposes. It does not represent a real set of observations.
 #  #
@@ -160,38 +160,38 @@ library(bnstruct)
 #                               num.time.steps = 2,
 #                               layering = layers)
 
-## ----dag1,eval=FALSE-----------------------------------------------------
+## ----dag1,eval=FALSE----------------------------------------------------------
 #  dag(net)
 #  wpdag(net)
 
-## ----cpts2,eval=FALSE----------------------------------------------------
+## ----cpts2,eval=FALSE---------------------------------------------------------
 #  cpts(net)
 
-## ----plotprint,eval=FALSE------------------------------------------------
+## ----plotprint,eval=FALSE-----------------------------------------------------
 #  plot(net) # regular DAG
 #  plot(net, plot.wpdag=T) # wpdag
 
-## ----plotqgraph,eval=FALSE-----------------------------------------------
+## ----plotqgraph,eval=FALSE----------------------------------------------------
 #  plot(net, method="qgraph",
 #            label.scale.equal=T,
 #            node.width = 1.6,
 #            plot.wpdag=T)
 
-## ----show,eval=FALSE-----------------------------------------------------
+## ----show,eval=FALSE----------------------------------------------------------
 #  # TFAE
 #  print(net)
 #  show(net)
 #  net
 
-## ----writecyto,eval=FALSE------------------------------------------------
+## ----writecyto,eval=FALSE-----------------------------------------------------
 #  write.xgmml(net)
 
-## ----infeng1,eval=FALSE--------------------------------------------------
+## ----infeng1,eval=FALSE-------------------------------------------------------
 #  dataset <- child()
 #  net     <- learn.network(dataset)
 #  engine  <- InferenceEngine(net)
 
-## ----infeng2,eval=FALSE--------------------------------------------------
+## ----infeng2,eval=FALSE-------------------------------------------------------
 #  dataset <- child()
 #  net     <- learn.network(dataset)
 #  
@@ -207,14 +207,14 @@ library(bnstruct)
 #  engine  <- InferenceEngine(net)
 #  observations(engine) <- obs
 
-## ----infeng3,eval=FALSE--------------------------------------------------
+## ----infeng3,eval=FALSE-------------------------------------------------------
 #  obs <- list("observed.vars" = c(1,4),
 #              "observed.vals" = c(2,1))
 #  engine  <- InferenceEngine(net)
 #  engine  <- belief.propagation(engine, obs)
 #  new.net <- updated.bn(engine)
 
-## ----infeng4,eval=FALSE--------------------------------------------------
+## ----infeng4,eval=FALSE-------------------------------------------------------
 #  dataset <- child()
 #  net     <- learn.network(dataset)
 #  engine  <- InferenceEngine(net)
@@ -222,7 +222,16 @@ library(bnstruct)
 #  updated.engine  <- results$InferenceEngine
 #  updated.dataset <- results$BNDataset
 
-## ----childtest,eval=FALSE,cache=FALSE------------------------------------
+## ----infeng5,eval=FALSE-------------------------------------------------------
+#  dataset       <- asia()
+#  net           <- learn.network(dataset)
+#  interventions <- list(intervention.vars=c(3),
+#                        intervention.vals=c(1))
+#  engine        <- InferenceEngine(net, interventions = interventions)
+#  test.updated.bn(engine) # TRUE
+#  get.most.probable.values(updated.bn(engine))
+
+## ----childtest,eval=FALSE,cache=FALSE-----------------------------------------
 #  dataset <- child()
 #  
 #  # learning with available cases analysis, MMHC, BDeu
@@ -234,7 +243,7 @@ library(bnstruct)
 #  net <- learn.network(imp.dataset, use.imputed.data = TRUE)
 #  plot(net)
 
-## ----childtest1cont1,eval=FALSE------------------------------------------
+## ----childtest1cont1,eval=FALSE-----------------------------------------------
 #  # SEM, BDeu using previous network as starting point
 #  net <- learn.network(dataset, algo = "sem",
 #                       scoring.func = "BDeu",
@@ -243,7 +252,7 @@ library(bnstruct)
 #                       param.threshold = 0.001)
 #  plot(net)
 
-## ----childtest1cont2,eval=FALSE------------------------------------------
+## ----childtest1cont2,eval=FALSE-----------------------------------------------
 #  # we update the probabilities with EM from the raw dataset,
 #  # starting from the first network
 #  engine  <- InferenceEngine(net)
@@ -251,14 +260,14 @@ library(bnstruct)
 #  updated.engine  <- results$InferenceEngine
 #  updated.dataset <- results$BNDataset
 
-## ----asiatest,eval=FALSE,cache=FALSE-------------------------------------
+## ----asiatest,eval=FALSE,cache=FALSE------------------------------------------
 #  dataset <- asia()
 #  dataset <- bootstrap(dataset)
 #  net <- learn.network(dataset, bootstrap = TRUE)
 #  
 #  plot(net)
 
-## ----naivebayes,eval=FALSE-----------------------------------------------
+## ----naivebayes,eval=FALSE----------------------------------------------------
 #  # artificial dataset generation
 #  spam <- sample(c(0,1), 1000, prob=c(0.5, 0.5), replace=T)
 #  buy <- sapply(spam, function(x) {

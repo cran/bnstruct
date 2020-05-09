@@ -9,8 +9,8 @@ Description: Bayesian Network Structure Learning from Data with Missing Values.
 Type: Package
 Title: Bayesian Network Structure Learning from Data with Missing
         Values
-Version: 1.0.6
-Date: 2019-07-09
+Version: 1.0.7
+Date: 2020-05-04
 Depends: R (>= 3.5.0), bitops, Matrix, igraph, methods
 Suggests: graph, Rgraphviz, qgraph, knitr, testthat
 Authors@R: c(person("Francesco", "Sambo", role=c("aut"),
@@ -18,12 +18,12 @@ Authors@R: c(person("Francesco", "Sambo", role=c("aut"),
     email="afranzin@ulb.ac.be"))
 License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2019-07-09 08:53:42 UTC; alberto
+Packaged: 2020-05-09 09:28:02 UTC; alberto
 Author: Francesco Sambo [aut],
   Alberto Franzin [aut, cre]
 Maintainer: Alberto Franzin <afranzin@ulb.ac.be>
 Repository: CRAN
-Date/Publication: 2019-07-09 10:23:07 UTC
+Date/Publication: 2020-05-09 10:10:02 UTC

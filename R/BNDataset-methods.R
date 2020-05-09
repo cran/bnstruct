@@ -69,7 +69,7 @@ BNDataset <- function(data, discreteness, variables = NULL, node.sizes = NULL, .
     } else {
       stop("Incoherent number of variables in the dataset header.")
     }
-    num.variables(dataset) <- length(variables)
+    num.variables(dataset) <- length(variables(dataset))
   }
   
   if (length(node.sizes) > 1) {
@@ -83,6 +83,14 @@ BNDataset <- function(data, discreteness, variables = NULL, node.sizes = NULL, .
   }
   
   if (length(discreteness) > 1) {
+    for (d in 1:length(discreteness)) {
+      if (discreteness[d] %in% c("d","D","T","TRUE")) discreteness[d] <- 'D'
+      else if (discreteness[d] %in% c("c","C","F","FALSE")) discreteness[d] <- 'C'
+      else {
+        bnstruct.log("Unrecognized status for variable ",variables(dataset)[d],", converting it to discrete.")
+        discreteness[d] <- 'D'
+      }
+    }
     if (length(discreteness) == ncol(as.matrix(data))) {
       discreteness(dataset) <- discreteness
     } else if (num.time.steps > 1 && length(discreteness) * num.time.steps == ncol(as.matrix(data))) {
