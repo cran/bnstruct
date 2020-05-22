@@ -1,4 +1,9 @@
-bnstruct v1.0.7 (Release date: 2020-01-02)
+bnstruct v1.0.8 (Release date: 2020-05-022)
+===============
+
+* Bugfix in EM
+
+bnstruct v1.0.7 (Release date: 2020-05-04)
 ===============
 
 * Improved robustness in reading data and header files
