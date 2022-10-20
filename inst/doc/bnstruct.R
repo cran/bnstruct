@@ -62,63 +62,25 @@ library(bnstruct)
 #  show(dataset)
 #  dataset # from inside an R session
 
-## ----getdata1,eval=TRUE,cache=TRUE------------------------
-options(max.print = 200, width = 60)
-
-dataset <- child()
-# if we want raw data
-raw.data(dataset)
-
-# if we want imputed dataset: this raises an error
-imputed.data(dataset)
-
-# with tryCatch we manage the error
-tryCatch(
-  imp.data <- imputed.data(dataset),
-  error = function(e) {
-    cat("Hey! Something went wrong. No imputed data present maybe?")
-    imp.data <<- NULL
-  }
-)
-imp.data
-
-# test before trying
-if (has.imputed.data(dataset)) {
-  imp.data <- imputed.data(dataset)
-} else {
-  imp.data <- NULL
-}
-imp.data
-
-# now perform imputation on the dataset
-dataset <- impute(dataset)
-imputed.data(dataset)
-
-## ----completecases,eval=FALSE,cache=T---------------------
-#  complete.subset <- complete(dataset)
-#  
-#  # require completeness only on a subset of variables
-#  complete.subset <- complete(dataset, c(1,4,7))
-
-## ----getboot,eval=FALSE-----------------------------------
+## ----getboot,eval=FALSE-------------------------------------------------------
 #  # get raw samples
 #  for (i in 1:num.boots(dataset))
 #    print( boot(dataset, i) )
 
-## ----getboot.1,eval=FALSE---------------------------------
+## ----getboot.1,eval=FALSE-----------------------------------------------------
 #  # get imputed samples
 #  for (i in 1:num.boots(dataset))
 #    print( boot(dataset, i, use.imputed.data = TRUE) )
 
-## ----bn2, eval=FALSE--------------------------------------
+## ----bn2, eval=FALSE----------------------------------------------------------
 #  dataset <- child()
 #  net     <- BN(dataset)
 
-## ----learn.network, eval=FALSE----------------------------
+## ----learn.network, eval=FALSE------------------------------------------------
 #  dataset <- child()
 #  net     <- learn.network(dataset)
 
-## ----learn.network.2, eval=FALSE--------------------------
+## ----learn.network.2, eval=FALSE----------------------------------------------
 #  dataset <- child()
 #  net.1   <- learn.network(dataset,
 #                           algo = "sem",
@@ -129,7 +91,7 @@ imputed.data(dataset)
 #                           scoring.func = "BDeu",
 #                           use.imputed.data = TRUE)
 
-## ----learn.network.chain, eval=FALSE----------------------
+## ----learn.network.chain, eval=FALSE------------------------------------------
 #  dataset <- child()
 #  net.1   <- learn.network(dataset,
 #                           initial.network = "random.chain",
@@ -138,11 +100,11 @@ imputed.data(dataset)
 #                           algo = "sem",
 #                           initial.network = net.1)
 
-## ----layering,eval=F--------------------------------------
+## ----layering,eval=F----------------------------------------------------------
 #  layers <- c(1,2,3,3,3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5)
 #  net.layer <- learn.network(dataset, layering = layers)
 
-## ----learn.network.3, eval=FALSE--------------------------
+## ----learn.network.3, eval=FALSE----------------------------------------------
 #  dataset <- child()
 #  dataset <- bootstrap(dataset, 100, imputation = TRUE)
 #  net.1   <- learn.network(dataset,
@@ -156,7 +118,7 @@ imputed.data(dataset)
 #                           bootstrap = TRUE,
 #                           use.imputed.data = TRUE)
 
-## ----dbn1,eval=F------------------------------------------
+## ----dbn1,eval=F--------------------------------------------------------------
 #  # asia_2_layers is a toy example constructed purely for testing
 #  # purposes. It does not represent a real set of observations.
 #  #
@@ -169,7 +131,7 @@ imputed.data(dataset)
 #                       starts_from = 0)
 #  dbn <- learn.dynamic.network(dataset, num.time.steps = 2)
 
-## ----dbn2,eval=F------------------------------------------
+## ----dbn2,eval=F--------------------------------------------------------------
 #  # asia_2_layers is a toy example constructed purely for testing
 #  # purposes. It does not represent a real set of observations.
 #  #
@@ -182,7 +144,7 @@ imputed.data(dataset)
 #                       starts.from = 0)
 #  dbn <- learn.network(dataset)
 
-## ----dbn3,eval=F------------------------------------------
+## ----dbn3,eval=F--------------------------------------------------------------
 #  # asia_2_layers is a toy example constructed purely for testing
 #  # purposes. It does not represent a real set of observations.
 #  #
@@ -198,38 +160,38 @@ imputed.data(dataset)
 #                               num.time.steps = 2,
 #                               layering = layers)
 
-## ----dag1,eval=FALSE--------------------------------------
+## ----dag1,eval=FALSE----------------------------------------------------------
 #  dag(net)
 #  wpdag(net)
 
-## ----cpts2,eval=FALSE-------------------------------------
+## ----cpts2,eval=FALSE---------------------------------------------------------
 #  cpts(net)
 
-## ----plotprint,eval=FALSE---------------------------------
+## ----plotprint,eval=FALSE-----------------------------------------------------
 #  plot(net) # regular DAG
 #  plot(net, plot.wpdag=T) # wpdag
 
-## ----plotqgraph,eval=FALSE--------------------------------
+## ----plotqgraph,eval=FALSE----------------------------------------------------
 #  plot(net, method="qgraph",
 #            label.scale.equal=T,
 #            node.width = 1.6,
 #            plot.wpdag=T)
 
-## ----show,eval=FALSE--------------------------------------
+## ----show,eval=FALSE----------------------------------------------------------
 #  # TFAE
 #  print(net)
 #  show(net)
 #  net
 
-## ----writecyto,eval=FALSE---------------------------------
+## ----writecyto,eval=FALSE-----------------------------------------------------
 #  write.xgmml(net)
 
-## ----infeng1,eval=FALSE-----------------------------------
+## ----infeng1,eval=FALSE-------------------------------------------------------
 #  dataset <- child()
 #  net     <- learn.network(dataset)
 #  engine  <- InferenceEngine(net)
 
-## ----infeng2,eval=FALSE-----------------------------------
+## ----infeng2,eval=FALSE-------------------------------------------------------
 #  dataset <- child()
 #  net     <- learn.network(dataset)
 #  
@@ -245,14 +207,14 @@ imputed.data(dataset)
 #  engine  <- InferenceEngine(net)
 #  observations(engine) <- obs
 
-## ----infeng3,eval=FALSE-----------------------------------
+## ----infeng3,eval=FALSE-------------------------------------------------------
 #  obs <- list("observed.vars" = c(1,4),
 #              "observed.vals" = c(2,1))
 #  engine  <- InferenceEngine(net)
 #  engine  <- belief.propagation(engine, obs)
 #  new.net <- updated.bn(engine)
 
-## ----infeng4,eval=FALSE-----------------------------------
+## ----infeng4,eval=FALSE-------------------------------------------------------
 #  dataset <- child()
 #  net     <- learn.network(dataset)
 #  engine  <- InferenceEngine(net)
@@ -260,7 +222,7 @@ imputed.data(dataset)
 #  updated.engine  <- results$InferenceEngine
 #  updated.dataset <- results$BNDataset
 
-## ----infeng5,eval=FALSE-----------------------------------
+## ----infeng5,eval=FALSE-------------------------------------------------------
 #  dataset       <- asia()
 #  net           <- learn.network(dataset)
 #  interventions <- list(intervention.vars=c(3),
@@ -269,7 +231,7 @@ imputed.data(dataset)
 #  test.updated.bn(engine) # TRUE
 #  get.most.probable.values(updated.bn(engine))
 
-## ----childtest,eval=FALSE,cache=FALSE---------------------
+## ----childtest,eval=FALSE,cache=FALSE-----------------------------------------
 #  dataset <- child()
 #  
 #  # learning with available cases analysis, MMHC, BDeu
@@ -281,7 +243,7 @@ imputed.data(dataset)
 #  net <- learn.network(imp.dataset, use.imputed.data = TRUE)
 #  plot(net)
 
-## ----childtest1cont1,eval=FALSE---------------------------
+## ----childtest1cont1,eval=FALSE-----------------------------------------------
 #  # SEM, BDeu using previous network as starting point
 #  net <- learn.network(dataset, algo = "sem",
 #                       scoring.func = "BDeu",
@@ -290,7 +252,7 @@ imputed.data(dataset)
 #                       param.threshold = 0.001)
 #  plot(net)
 
-## ----childtest1cont2,eval=FALSE---------------------------
+## ----childtest1cont2,eval=FALSE-----------------------------------------------
 #  # we update the probabilities with EM from the raw dataset,
 #  # starting from the first network
 #  engine  <- InferenceEngine(net)
@@ -298,14 +260,14 @@ imputed.data(dataset)
 #  updated.engine  <- results$InferenceEngine
 #  updated.dataset <- results$BNDataset
 
-## ----asiatest,eval=FALSE,cache=FALSE----------------------
+## ----asiatest,eval=FALSE,cache=FALSE------------------------------------------
 #  dataset <- asia()
 #  dataset <- bootstrap(dataset)
 #  net <- learn.network(dataset, bootstrap = TRUE)
 #  
 #  plot(net)
 
-## ----naivebayes,eval=FALSE--------------------------------
+## ----naivebayes,eval=FALSE----------------------------------------------------
 #  # artificial dataset generation
 #  spam <- sample(c(0,1), 1000, prob=c(0.5, 0.5), replace=T)
 #  buy <- sapply(spam, function(x) {

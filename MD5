@@ -1,7 +1,7 @@
-c04d7a63ad9a5f1f2d67f6c00bb2dd81 *DESCRIPTION
+3ad5d961a6701d806f21dea6f0def08a *DESCRIPTION
 590f4259ae6e416a3ff9d0c493bab2f0 *LICENSE
 14667ad0ddb48e8dfcb9ab42956bcca4 *NAMESPACE
-71193b2731c23be6b2520a6dbdd0c950 *NEWS.md
+e357958400219d727eb749f567997444 *NEWS.md
 45e7f5c8e3890a954ce16c8c698a7df6 *R/AllClasses.R
 2a2c851c831645f535b44757c052a07d *R/AllGenerics.R
 3b35ab134bc54e2de91ded56647ed66f *R/BN-methods.R
@@ -28,9 +28,9 @@ e3144c311fda6bdd09fc0ed33a7c7090 *build/vignette.rds
 bd6ff1facb19d694d5af7dfb112b0ba5 *data/child_NA_5000.rda
 b083e70d356672774621b693a7930cf6 *inst/CITATION
 ed4761f70e0f396b0fa45aa801010607 *inst/doc/bnstruct-manual.pdf
-5a132ab2244ebc9c9dd967731c4c905f *inst/doc/bnstruct.R
-f20133a02b63518cb80e617ffb2ff99e *inst/doc/bnstruct.Rnw
-4006d90bfa5c1c0465753ceaaf69ff02 *inst/doc/bnstruct.pdf
+cfa98cb7a4c4716fe84e82c3f805c9d0 *inst/doc/bnstruct.R
+46a9ac029a17960bd2aa18e05a2b4a8c *inst/doc/bnstruct.Rnw
+c027ae51a7175f3065a65fc1599d35d1 *inst/doc/bnstruct.pdf
 56ba1d3caa45179fd491d8cba6b832c2 *inst/examples/dbn.R
 413bb6fb7c02cdf99a77c99095ec0704 *inst/examples/naivebayes.R
 63865856d386119ae649848a91afb472 *inst/examples/test_bp_asia.R
@@ -162,7 +162,7 @@ b03ac77f0e600b6232aadf1f27278601 *tests/testthat/test_sl.R
 2527775949a23fdf633693286bcf9ca2 *vignettes/andes_crosses.pdf
 4414a190bc28376304989c021a53ada2 *vignettes/asiatest-1.pdf
 2d4f8e165dc09855e68d74620cd5c871 *vignettes/bibtex.bib
-f20133a02b63518cb80e617ffb2ff99e *vignettes/bnstruct.Rnw
+46a9ac029a17960bd2aa18e05a2b4a8c *vignettes/bnstruct.Rnw
 6947c29436d79606bd84d0f20a9d9e40 *vignettes/child_crosses_1000.eps
 1e971de1ee583fcbe917068a377f0301 *vignettes/child_crosses_1000.pdf
 f94d5be61556a29cb8989ecf235b05fe *vignettes/childtest-1.pdf
