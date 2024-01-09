@@ -23,12 +23,12 @@ setMethod("initialize",
 #' 
 #' @param bn a \code{\link{BN}} object.
 #' @param observations a list of observations composed by the two following vectors:
-#' \itemize{
+#' \describe{
 #' \item{\code{observed.vars}:}{vector of observed variables;}
 #' \item{\code{observed.vals}:}{vector of values observed for the variables in \code{observed.vars} in the corresponding position.}
 #' }
 #' @param interventions a list of interventions composed of the following two vectors:
-#' \itemize{
+#' \describe{
 #' \item{\code{intervention.vars}:}{vector of variables for which an intervention has been performed;}
 #' \item{\code{intervention.vals}:}{vector of values chosen for the variables in \code{intervention.vals} in the corresponding position.}
 #' }
@@ -67,7 +67,7 @@ InferenceEngine <- function(bn = NULL, observations = NULL, interventions = NULL
     if (!is.null(interventions)) {
       intervention.vars <- interventions[[1]]
       intervention.vals <- interventions[[2]]
-      intervs <- unique.observations(intervention.vars, intervention.vals)
+      intervs <- unique_observations(intervention.vars, intervention.vals)
       intervs.vars <- intervs$observed.vars
       for (i in intervs.vars) {
         dag[,i] <- 0
@@ -287,7 +287,7 @@ setReplaceMethod("observations",
                  {
                    ovrs <- c(unlist(value[[1]]))
                    ovls <- c(unlist(value[[2]]))
-                   obs  <- unique.observations(ovrs, ovls)
+                   obs  <- unique_observations(ovrs, ovls)
                    slot(x, "observed.vars") <- obs$observed.vars
                    slot(x, "observed.vals") <- obs$observed.vals
                    validObject(x)
@@ -306,7 +306,7 @@ setReplaceMethod("interventions",
                  {
                    ivrs <- c(unlist(value[[1]]))
                    ivls <- c(unlist(value[[2]]))
-                   ivs  <- unique.observations(ivrs, ivls)
+                   ivs  <- unique_observations(ivrs, ivls)
                    slot(x, "intervention.vars") <- ivs$observed.vars
                    slot(x, "intervention.vals") <- ivs$observed.vals
                    validObject(x)
@@ -324,7 +324,7 @@ setReplaceMethod("add.observations",
                  {
                    ovrs <- c(slot(x, "observed.vars"), c(unlist(value[[1]])))
                    ovls <- c(slot(x, "observed.vals"), c(unlist(value[[2]])))
-                   obs  <- unique.observations(ovrs, ovls)
+                   obs  <- unique_observations(ovrs, ovls)
                    slot(x, "observed.vars") <- obs$observed.vars
                    slot(x, "observed.vals") <- obs$observed.vals
                    validObject(x)
@@ -613,7 +613,7 @@ print.InferenceEngine <- function(x, engine = "jt", ...)
           }#)
 
 # keep last (most recent) observation for each var
-unique.observations <- function(observed.vars, observed.vals)
+unique_observations <- function(observed.vars, observed.vals)
 {
   ovrs <- unlist(observed.vars)
   ovls <- unlist(observed.vals)
